@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Sistema de Comando</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com"crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  </head>
+
+  <body>
+
+    <div class="container" id="inicio">
+
+      <h1>Sistema de <span>Comanda</span></h1>
+
+      <p>Bem-vindo(a) ao sistema da Feira Financeira!</p>
+
+      <h2>Escolha a sala</h2>
+      
+      <div class="salas">
+      
+        <button class="cardSala" id="sala1">
+      
+          <div class="iconeSala">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      
+              <path
+                d="M12 3V21"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+      
+              <path
+                d="M17 7H9.5C8.12 7 7 8.12 7 9.5C7 10.88 8.12 12 9.5 12H14.5C15.88 12 17 13.12 17 14.5C17 15.88 15.88 17 14.5 17H7"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+      
+            </svg>
+          </div>
+      
+          <div class="textoSala">
+            <strong>1º ano</strong>
+            <span>Gasto Consciente</span>
+          </div>
+      
+        </button>
+      
+        <button class="cardSala" id="sala2">
+      
+          <div class="iconeSala">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      
+              <path
+                d="M12 3V21"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+      
+              <path
+                d="M7 8L12 3L17 8"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+      
+              <path
+                d="M7 16L12 21L17 16"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+      
+            </svg>
+          </div>
+      
+          <div class="textoSala">
+            <strong>2º ano</strong>
+            <span>Ganhar Mais</span>
+          </div>
+      
+        </button>
+      
+        <button class="cardSala" id="sala3">
+      
+          <div class="iconeSala">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      
+              <path
+                d="M4 19L10 13L14 17L21 10"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+      
+              <path
+                d="M16 10H21V15"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+      
+            </svg>
+          </div>
+      
+          <div class="textoSala">
+            <strong>3º ano</strong>
+            <span>Investir Melhor</span>
+          </div>
+      
+        </button>
+      
+      </div>
+      
+      </div>
+
+    <div class="container"id="comanda"style="display:none;">
+
+      <h1>Nova Comanda</h1>
+
+      <p>Comece registrando os dados da sua comanda.</p>
+
+      <label for="numero">Número da Comanda:</label>
+
+      <input
+      type="number"
+      id="numero"
+      placeholder="Digite o número da comanda"
+      >
+
+      <br><br>
+
+      <label for="saldoInicial">Saldo Inicial:</label>
+
+      <input
+      type="number"
+      id="saldoInicial"
+      value="3000"
+      step="0.01"
+      min="0"
+      >
+
+      <p id="mensagem"></p>
+
+      <button id="continuar">Continuar</button>
+
+      <div id="produtos" style="display:none;">
+
+        <h2>Comanda #<span id="numeroComanda"></span></h2>
+
+        <p>Saldo: R$ <span id="saldo">3.000,00</span></p>
+
+        <h3>Adicionar atividade</h3>
+
+        <label for="atividade">Atividade:</label>
+        <input
+        type="text"
+        id="atividade"
+        placeholder="Digite a atividade"
+        >
+
+        <br><br>
+
+        <label for="valor">Valor:</label>
+        <input 
+        type="number"
+        id="valor"
+        placeholder="0.00"
+        step="0.01"
+        >
+
+        <br><br>
+
+        <label for="quantidade">Quantidade:</label>
+        <input 
+        type="number"
+        id="quantidade"
+        value="1"
+        min="1"
+        >
+
+        <br><br>
+
+        <button id="adicionar">Adicionar</button>
+
+        <hr>
+
+        <h3>Itens da comanda</h3>
+
+        <div id="listaItens"></div>
+
+        <h2>Total: R$ <span id="total">0.00</span></h2>
+
+        <br>
+
+        <button id="salvarComanda">Salvar e sair</button>
+
+    </div>
+
+    </div>
+
+    <div class="container"id="sala2Tela" style="display: none">
+
+      <h1>2º ano - Ganhar Mais</h1>
+
+      <p>Digite o número de uma comanda já existente:</p>
+
+      <input 
+      type="number"
+      id="numeroComandaSala2"
+      placeholder="Número da comanda"
+      >
+
+      <br><br>
+
+      <button id="buscarComandaSala2">Continuar</button>
+
+      <p id="mensagemSala2"></p>
+
+      <div id="itensSala2" style="display: none;">
+
+        <h2>Comanda <span id="numeroExibidoSala2"></span></h2>
+
+        <p>Saldo: R$ <span id="saldoSala2">0.00</span></p>
+
+        <p>Total ganho: R$ <span id="totalSala2">0.00</span></p>
+
+        <h3>Registrar ganho</h3>
+
+        <input 
+        type="text"
+        id="atividadeSala2"
+        placeholder="Como você ganhou esse dinheiro?"
+        >
+
+        <br><br>
+
+        <input 
+        type="number"
+        id="valorSala2"
+        placeholder="Valor"
+        step="0.01"
+        >
+
+        <br><br>
+
+        <input 
+        type="number"
+        id="quantidadeSala2"
+        placeholder="Quantidade"
+        min="1"
+        >
+
+        <br><br>
+
+        <button id="adicionarSala2">Adicionar</button>
+
+        <h3>Itens adicionados</h3>
+
+        <div id="listaItensSala2">
+          <p>Nenhum item adicionado.</p>
+        </div>
+
+        <br>
+
+        <button id="salvarSala2">Salvar e sair</button>
+
+      </div>
+
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
