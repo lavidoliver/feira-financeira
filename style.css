@@ -1,0 +1,335 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  min-height: 100vh;
+
+  background: #7d0000;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 30px;
+}
+
+.container {
+  width: 100%;
+  max-width: 820px;
+
+  background: #fff9f7;
+
+  padding: 55px 60px;
+
+  border-radius: 28px;
+
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+
+  text-align: center;
+}
+
+h1 {
+  font-size: 52px;
+  margin-bottom: 15px;
+
+  color: #111;
+
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+h1 span {
+  color: #a00000;
+}
+
+h2 {
+  color: #8b0000;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+h3 {
+  color: #5c0000;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+p {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 25px;
+}
+
+button {
+  border: none;
+
+  background: linear-gradient(135deg,
+      #d40000,
+      #a50000);
+
+  color: white;
+
+  font-family: 'Poppins', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+
+  padding: 18px 28px;
+
+  border-radius: 16px;
+
+  cursor: pointer;
+
+  box-shadow: 
+    0 7px 15px rgba(120, 0, 0, 0.25);
+
+  transition: 0.2s;
+}
+
+button:hover {
+  transform: translateY(-2px);
+
+  box-shadow: 
+    0 10px 20px rgba(120, 0, 0, 0.35);
+}
+
+#inicio button {
+  display: block;
+
+  width: 100%;
+
+  margin: 18px 0;
+
+  text-align: left;
+
+  padding: 22px 30px;
+
+  border-radius: 18px;
+}
+
+input {
+  width: 100%;
+  max-width: 500px;
+
+  padding: 15px 18px;
+
+  border: 2px solid #ddd;
+
+  border-radius: 12px;
+
+  font-family: 'Poppins', sans-serif;
+  font-size: 17px;
+
+  background: white;
+
+  outline: none;
+
+  transition: 0.2s;
+}
+
+input:focus {
+  border-color: #b00000;
+
+  box-shadow: 
+    0 0 0 3px rgba(176, 0, 0, 0.12);
+}
+
+hr {
+  border: none;
+
+  border-top: 1px solid #ddd;
+
+  margin: 30px 0;
+}
+
+#listaItens,
+#listaItensSala2,
+#listaItensSala3 {
+  background: #fff;
+
+  border-radius: 15px;
+
+  padding: 10px;
+
+  margin-top: 15px;
+
+  text-align: left;
+}
+
+.salas {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 25px;
+}
+
+.cardSala {
+  width: 82%;
+  margin: 0 auto;
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 10px 14px;
+
+  background: #ffffff;
+
+  color: #222;
+
+  border: 1.5px solid #eeeeee;
+
+  border-radius: 13px;
+
+  text-align: left;
+
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
+
+  transition: 0.25s;
+}
+
+.iconeSala {
+  width: 36px;
+  height: 36px;
+
+  border-radius: 10px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #fff0f0;
+
+  color: #b00000;
+
+  border-radius: 10px;
+}
+
+.iconeSala svg {
+  width: 19px;
+  height: 19px;
+}
+
+.textoSala {
+  display: flex;
+  flex-direction: column;
+
+  gap: 1px;
+}
+
+.textoSala strong {
+  font-size: 15px;
+
+  color: #222;
+
+  font-weight: 700;
+}
+
+.textoSala span {
+  font-size: 12px;
+
+  color: #777;
+
+  font-weight: 500;
+}
+
+.cardSala:hover {
+  transform: translateY(-3px);
+
+  border-color: #d40000;
+
+  box-shadow: 
+    0 10px 25px rgba(140, 0, 0, 0.15);
+}
+
+#comanda h1 {
+  font-size: 34px;
+  margin-bottom: 5px;
+}
+
+#comanda>p {
+  font-size: 14px;
+  margin-bottom: 18px;
+}
+
+#comanda>label {
+  display: block;
+  margin-top: 12px;
+  margin-bottom: 5px;
+  color: #5c0000;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: left;
+}
+
+#comanda input {
+  max-width: 100%;
+  padding: 11px 14px;
+  font-size: 14px;
+  border-radius: 10px;
+}
+
+#produtos {
+  margin-top: 25px;
+}
+
+#produtos h2 {
+  margin-bottom: 8px;
+  font-size: 22px;
+}
+
+#produtos h2 span {
+  color: #b00000;
+}
+
+#produtos>p {
+  display: inline-block;
+  padding: 8px 14px;
+  margin: 3px 0 18px;
+  background: #fff0f0;
+  border-radius: 10px;
+  color: #8b0000;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+#produtos label {
+  display: block;
+  margin-top: 12px;
+  margin-bottom: 5px;
+  color: #5c0000;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: left;
+}
+
+#produtos #adicionar {
+  margin-top: 15px;
+  padding: 12px 20px;
+  font-size: 14px;
+}
+
+#produtos #total {
+  color: #b00000;
+  font-size: 20px;
+}
+
+#salvarComanda {
+  margin-top: 5px;
+  padding: 11px 20px;
+  font-size: 14px;
+  background: white;
+  color: #a00000;
+  border: 2px solid #a00000;
+  box-shadow: none;
+}
+
+#salvarComanda:hover {
+  background: #fff0f0;
+}
