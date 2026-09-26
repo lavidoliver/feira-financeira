@@ -1,6 +1,6 @@
 import { inicializeApp } from
   "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
-import { getDatabase } from 
+import { getDatabase, ref, set } from 
   "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
 
 const firebaseConfig = {
@@ -359,3 +359,7 @@ campoQuantidadeSala2.value = 1;
 }; 
 
 console.log("Firebase conectado!");
+
+set(ref(db, "teste"), {
+  funcionando: true
+});
