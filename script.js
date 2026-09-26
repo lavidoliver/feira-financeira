@@ -336,16 +336,4 @@ campoAtividadeSala2.value = "";
 campoValorSala2.value = "";
 campoQuantidadeSala2.value = 1;
 
-}; 
-
-console.log("Firebase conectado!");
-
-set(ref(db, "teste"), {
-  funcionando: true
-})
-.then(() =>  {
-  document.body.innerHTML += "<p>FIREBASE: DEU CERTO!</P>";
-})
-.catch((erro) => {
-  document.body.innerHTML += "<p>FIREBASE ERRO: " + erro.code + "|" + erro.message + "</p>";
-});
+};
