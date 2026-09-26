@@ -354,3 +354,5 @@ campoValorSala2.value = "";
 campoQuantidadeSala2.value = 1;
 
 }; 
+
+console.log("Firebase conectado!");
