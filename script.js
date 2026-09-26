@@ -364,8 +364,8 @@ set(ref(db, "teste"), {
   funcionando: true
 })
 .then(() =>  {
-  alert("DEU CERTO! Firebase salvou os dados.);
+  document.body.innerHTML += "<p>FIREBASE: DEU CERTO!</P>";
 })
 .catch((erro) => {
-  alert("DEU ERRO: " + erro.message);
+  document.body.innerHTML += "<p>FIREBASE ERRO: " + erro.code + "|" + erro.message + "</p>";
 });
