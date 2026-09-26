@@ -362,4 +362,10 @@ console.log("Firebase conectado!");
 
 set(ref(db, "teste"), {
   funcionando: true
+})
+.then(() =>  {
+  alert("DEU CERTO! Firebase salvou os dados.);
+})
+.catch((erro) => {
+  alert("DEU ERRO: " + erro.message);
 });
