@@ -15,6 +15,9 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+
+console.log("Firebase conectado!", db);
+
 let comandas = {};
 
 const botaoSala1 =
