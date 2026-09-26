@@ -1,23 +1,3 @@
-import { inicializeApp } from
-  "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
-import { getDatabase, ref, set } from 
-  "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
-
-const firebaseConfig = {
-  apikey: "AlzaSyCik23azPVDkEC0klik8uyxjlClz6yqxk",
-  authDomain: "feira-financeira.firebaseapp.com",
-  databaseURL: "https://feira-financeira-default-rtdb.firebaseio.com",
-  projectId: "feira-financeira",
-  storageBucket: "feira-financeira.firebasestorage.app",
-  messagingSenderId: "84836569612",
-  appId: "1:84836569612:web:b2e04333c0e98f179ed429"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-console.log("Firebase conectado!", db);
-
 let comandas = {};
 
 const botaoSala1 =
