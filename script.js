@@ -279,6 +279,9 @@ botaoSalvarComanda.onclick = function() {
     itens: comandas[numero]?.itens||[]
   };
 
+  banco.ref("comandas/" +
+  numero).set(comandas[numero]);
+
   alert("Comanda " + numero + " salva com sucesso!");
 
   telaComanda.style.display = "none";
