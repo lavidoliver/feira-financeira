@@ -277,11 +277,16 @@ botaoSalvarComanda.onclick = function() {
     saldo: saldoAtual,
     total: valorTotal,
     itens: comandas[numero]?.itens||[]
-  };
+  };  
 
   banco.ref("comandas/" +
   numero).set(comandas[numero]);
-
+  .then(function() {
+  alert("SALVOU NO FIREBASE!");
+  })
+  .catch(function(erro) {
+  alert("ERRO DO FIREBASE:" + erro.message);
+  });
   alert("Comanda " + numero + " salva com sucesso!");
 
   telaComanda.style.display = "none";
