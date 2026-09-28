@@ -338,12 +338,4 @@ campoQuantidadeSala2.value = 1;
 
 };
 
-firebase.database().ref("teste").set({
-  funcionando: true
-})
-.then(function() {
-  console.log("Firebase salvou!")
-})
-.catch(function(erro) {
-  console.log("Erro no Firebase:", erro);
-});
+const banco = firebase.database();
