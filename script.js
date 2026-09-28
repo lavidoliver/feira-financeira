@@ -346,4 +346,4 @@ firebase.database().ref("teste").set({
 })
 .catch(function(erro) {
   console.log("Erro no Firebase:", erro);
-})                                                                                                        
+});
