@@ -279,26 +279,14 @@
 
     </div>
 
-    <script
-      src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
-    <script 
-      src="https://www.gstatic.com/firebasejs/12.19.0/firebse-database-compat.js"></script>
+    <h1>Conectando ao Realtime Database</h1>
+    
+    <input type="text" id="meuInput" placeholder="Digite algo...">
+    <button id="btnSalvar">Salvar no Banco</button>
+    
+    <h3>Dados salvos em tempo real:</h3>
+    <p id="textoExibido">Aguardando dados...</p>
 
-    <script>
-      const firebaseConfig = {
-        apiKey: "AlzaSyCikf23azPVDkEC0klik8uyxjlClz6yqxk",
-        authDomain: "feira-financeira.firebaseapp.com",
-        databaseURL: "https://feira-financeira-default-rtdb.firebaseio.com",
-        projectId: "feira-financeira",
-        storageBucket: "feira-financeira.firebasestorage.app",
-        messagingSenderId: "84836569612",
-        appId: "1:84836569612:web:b2e04333c0e98f179ed429"
-       };
-
-      firebase.initializeApp(firebaseConfig);
-      const db = firebase.database();
-      </script>
-
-    <script src="script.js"></script>
+    <script type="module" src="app.js"></script>
   </body>
 </html>
