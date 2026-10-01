@@ -10,7 +10,7 @@ const supabase = window.supabase.createClient(
   SUPABASE_KEY
 );
 
-console.log("SUPABASE CRIADO");
+alert("O JavaScript chegou até aqui!");
 
 let comandas = {};
 
