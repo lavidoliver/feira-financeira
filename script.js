@@ -1,20 +1,12 @@
-import { initializeApp } from "firebase/app";
-import { getDatabase, ref, set, get } from "firebase/database";
+const SUPABASE_URL = "https://celgectqwcsdoczkfnin.supabase.co/rest/v1/"
+const SUPABASE_URL = "sb_publishable_kKyXJsshfC40IaLh-FFhCQ_TIoeupXn"
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCikf23azPVDkEC0kIik8uyxjICIz6yqxk",
-  authDomain: "feira-financeira.firebaseapp.com",
-  databaseURL: "https://feira-financeira-default-rtdb.firebaseio.com",
-  projectId: "feira-financeira",
-  storageBucket: "feira-financeira.firebasestorage.app",
-  messagingSenderId: "84836569612",
-  appId: "1:84836569612:web:b2e04333c0e98f179ed429"
-};
+const supabase = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 
-const app = initializeApp(firebaseConfig);
-const banco = getDatabase(app);
-
-let comandas = {}; 
+let comandas = {};
 
 const botaoSala1 =
 document.querySelector("#sala1");
@@ -152,43 +144,15 @@ botaoSala2.onclick = function() {
 };
 
 botaoBuscarSala2.onclick = function() {
+
   const numero = campoNumeroSala2.value;
+
   mensagemSala2.textContent = "";
 
   if (numero === "") {
     mensagemSala2.textContent = "Digite o número da comanda.";
     return;
   }
-
-  get(ref(banco, "comandas/" + numero)).then((snapshot) => {
-    if (!snapshot.exists()) {
-      mensagemSala2.textContent = "Essa comanda não existe no sistema.";
-      itensSala2.style.display = "none";
-      return;
-    }
-
-    comandas[numero] = snapshot.val();
-
-    numeroExibidoSala2.textContent = numero;
-    document.querySelector("#saldoSala2").textContent = comandas[numero].saldo.toFixed(2);
-    document.querySelector("#totalSala2").textContent = (comandas[numero].ganhos || 0).toFixed(2);
-
-    const listaSala2 = document.querySelector("#listaItensSala2");
-    listaSala2.innerHTML = "";
-
-    if (!comandas[numero].itens || comandas[numero].itens.length === 0) {
-      listaSala2.innerHTML = "<p>Nenhum item adicionado.</p>";
-    } else {
-      comandas[numero].itens.forEach(function(item) {
-        listaSala2.innerHTML += `<p>${item.atividade} - ${item.quantidade}x - R$ ${item.subtotal.toFixed(2)}</p>`;
-      });
-    }
-
-    itensSala2.style.display = "block";
-  }).catch((erro) => {
-    mensagemSala2.textContent = "Erro ao buscar: " + erro.message;
-  });
-};
 
   if (!comandas[numero]) {
     mensagemSala2.textContent = "Essa comanda não existe.";
@@ -320,16 +284,9 @@ botaoSalvarComanda.onclick = function() {
   comandas[numero] = {
     saldo: saldoAtual,
     total: valorTotal,
-    itens: comandas[numero]?.itens || []
-  };  
+    itens: comandas[numero]?.itens||[]
+  };
 
-  set(ref(banco, "comandas/" +  numero).set(comandas[numero]);
-  .then(function() {
-  alert("SALVOU NO FIREBASE!");
-  })
-  .catch(function(erro) {
-  alert("ERRO DO FIREBASE:" + erro.message);
-  });
   alert("Comanda " + numero + " salva com sucesso!");
 
   telaComanda.style.display = "none";
@@ -377,7 +334,7 @@ document.querySelector("#mensagemSala2").textContent = "";
 
 document.querySelector("#itensSala2").style.display = "none";
 
-document.querySelector("#listaItensSala2").innerHTML = "<p>Nenhum item adicionado.</p>"
+document.querySelector("#listaItensSala2").inner.HTML = "<p>Nenhum item adicionado.</p>"
 
 document.querySelector("#saldoSala2").textContent = "0.00";
 
@@ -385,6 +342,6 @@ document.querySelector("#totalSala2").textContent = "0.00";
 
 campoAtividadeSala2.value = "";
 campoValorSala2.value = "";
-campoQuantidadeSala2.value = 1;
+campoQuantidadeSala.value = 1;
 
-};
+}; 
