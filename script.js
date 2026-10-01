@@ -1,4 +1,20 @@
-let comandas = {};
+import { initializeApp } from "firebase/app";
+import { getDatabase, ref, set, get } from "firebase/database";
+
+const firebaseConfig = {
+  apiKey: "SUA_API_KEY",
+  authDomain: "feira-financeira.firebaseapp.com",
+  databaseURL: "https://feira-financeira-default-rtdb.firebaseio.com",
+  projectId: "feira-financeira",
+  storageBucket: "feira-financeira.firebasestorage.app",
+  messagingSenderId: "84836569612",
+  appId: "SEU_APP_ID"
+};
+
+const app = initializeApp(firebaseConfig);
+const banco = getDatabase(app);
+
+let comandas = {}; 
 
 const botaoSala1 =
 document.querySelector("#sala1");
@@ -345,5 +361,3 @@ campoValorSala2.value = "";
 campoQuantidadeSala2.value = 1;
 
 };
-
-const banco = firebase.database();
