@@ -345,3 +345,19 @@ campoValorSala2.value = "";
 campoQuantidadeSala.value = 1;
 
 }; 
+
+async function testarSupabase () {
+  const { data, error } = await supabase 
+  .from("comandas")
+  .select("id")
+  .limit(1);
+
+  if (error) {
+    console.error("Erro no Supabase:", error);
+    return;
+  }
+
+  console.log("Supabase conectado!", data);
+}
+
+testarSupabase();
