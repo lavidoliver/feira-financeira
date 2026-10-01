@@ -1,10 +1,16 @@
+console.log("SCRIPT COMEÇOU");
+
 const SUPABASE_URL = "https://celgectqwcsdoczkfnin.supabase.co/rest/v1/"
 const SUPABASE_URL = "sb_publishable_kKyXJsshfC40IaLh-FFhCQ_TIoeupXn"
+
+console.log("Supabase:", window.supabase);
 
 const supabase = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
+
+console.log("SUPABASE CRIADO");
 
 let comandas = {};
 
