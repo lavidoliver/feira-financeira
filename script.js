@@ -152,15 +152,43 @@ botaoSala2.onclick = function() {
 };
 
 botaoBuscarSala2.onclick = function() {
-
   const numero = campoNumeroSala2.value;
-
   mensagemSala2.textContent = "";
 
   if (numero === "") {
     mensagemSala2.textContent = "Digite o número da comanda.";
     return;
   }
+
+  get(ref(banco, "comandas/" + numero)).then((snapshot) => {
+    if (!snapshot.exists()) {
+      mensagemSala2.textContent = "Essa comanda não existe no sistema.";
+      itensSala2.style.display = "none";
+      return;
+    }
+
+    comandas[numero] = snapshot.val();
+
+    numeroExibidoSala2.textContent = numero;
+    document.querySelector("#saldoSala2").textContent = comandas[numero].saldo.toFixed(2);
+    document.querySelector("#totalSala2").textContent = (comandas[numero].ganhos || 0).toFixed(2);
+
+    const listaSala2 = document.querySelector("#listaItensSala2");
+    listaSala2.innerHTML = "";
+
+    if (!comandas[numero].itens || comandas[numero].itens.length === 0) {
+      listaSala2.innerHTML = "<p>Nenhum item adicionado.</p>";
+    } else {
+      comandas[numero].itens.forEach(function(item) {
+        listaSala2.innerHTML += `<p>${item.atividade} - ${item.quantidade}x - R$ ${item.subtotal.toFixed(2)}</p>`;
+      });
+    }
+
+    itensSala2.style.display = "block";
+  }).catch((erro) => {
+    mensagemSala2.textContent = "Erro ao buscar: " + erro.message;
+  });
+};
 
   if (!comandas[numero]) {
     mensagemSala2.textContent = "Essa comanda não existe.";
@@ -292,11 +320,10 @@ botaoSalvarComanda.onclick = function() {
   comandas[numero] = {
     saldo: saldoAtual,
     total: valorTotal,
-    itens: comandas[numero]?.itens||[]
+    itens: comandas[numero]?.itens || []
   };  
 
-  banco.ref("comandas/" +
-  numero).set(comandas[numero]);
+  set(ref(banco, "comandas/" +  numero).set(comandas[numero]);
   .then(function() {
   alert("SALVOU NO FIREBASE!");
   })
