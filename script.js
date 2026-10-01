@@ -2,13 +2,13 @@ import { initializeApp } from "firebase/app";
 import { getDatabase, ref, set, get } from "firebase/database";
 
 const firebaseConfig = {
-  apiKey: "SUA_API_KEY",
+  apiKey: "AIzaSyCikf23azPVDkEC0kIik8uyxjICIz6yqxk",
   authDomain: "feira-financeira.firebaseapp.com",
   databaseURL: "https://feira-financeira-default-rtdb.firebaseio.com",
   projectId: "feira-financeira",
   storageBucket: "feira-financeira.firebasestorage.app",
   messagingSenderId: "84836569612",
-  appId: "SEU_APP_ID"
+  appId: "1:84836569612:web:b2e04333c0e98f179ed429"
 };
 
 const app = initializeApp(firebaseConfig);
