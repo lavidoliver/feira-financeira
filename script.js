@@ -1,7 +1,7 @@
-console.log("SCRIPT COMEÇOU");
+alert("SCRIPT.JS ESTÁ CARREGANDO!");
 
-const SUPABASE_URL = "https://celgectqwcsdoczkfnin.supabase.co/rest/v1/"
-const SUPABASE_URL = "sb_publishable_kKyXJsshfC40IaLh-FFhCQ_TIoeupXn"
+const SUPABASE_URL = "https://celgectqwcsdoczkfnin.supabase.co/rest/v1/";
+const SUPABASE_URL = "sb_publishable_kKyXJsshfC40IaLh-FFhCQ_TIoeupXn";
 
 console.log("Supabase:", window.supabase);
 
