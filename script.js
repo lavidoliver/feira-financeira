@@ -6,6 +6,8 @@ const supabaseClient = window.supabase.createClient(
   SUPABASE_KEY
   );
 
+console.log("SUPABASE CONECTADO!");
+
 let comandas = {};
 
 const botaoSala1 =
