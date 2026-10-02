@@ -1,3 +1,11 @@
+const SUPABASE_URL = "https://celgectqwcsdoczkfnin.supabase.co/rest/v1/";
+const SUPABASE_URL = "sb_publishable_kKyXJsshfC40IaLh-FFhCQ_TIoeupXn";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+  );
+
 let comandas = {};
 
 const botaoSala1 =
