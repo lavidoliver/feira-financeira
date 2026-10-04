@@ -47,7 +47,7 @@ document.querySelector("#produtos");
 const numeroComanda =
 document.querySelector("#numeroComanda");
 
-botaoContinuar.onclick = function() {
+botaoContinuar.onclick = async function() {
 
   const numero = campoNumero.value;
 
@@ -63,6 +63,17 @@ botaoContinuar.onclick = function() {
       ganhos: 0,
       itens: []
     };
+
+    const { error } = await supabaseClient
+    .from("comandas")
+    .insert({
+      numero: Number(numero)
+    });
+
+    if (error) {
+      alert("ERRO AO CRIAR COMANDA: " + error.message);
+      return;
+    }
   }
 
   numeroComanda.textContent = numero;
