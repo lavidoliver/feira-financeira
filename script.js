@@ -1,4 +1,4 @@
-const SUPABASE_URL = "https://celgectqwcsdoczkfnin.supabase.co/rest/v1/";
+const SUPABASE_URL = "https://celgectqwcsdoczkfnin.supabase.co";
 const SUPABASE_KEY = "sb_publishable_kKyXJsshfC40IaLh-FFhCQ_TIoeupXn";
 
 const supabaseClient = window.supabase.createClient(
@@ -20,6 +20,7 @@ async function testarSupabase() {
   }
 
   alert("SUPABASE FUNCIONANDO!");
+}
 
   testarSupabase();
 
@@ -361,20 +362,4 @@ campoAtividadeSala2.value = "";
 campoValorSala2.value = "";
 campoQuantidadeSala.value = 1;
 
-}; 
-
-async function testarSupabase () {
-  const { data, error } = await supabase 
-  .from("comandas")
-  .select("id")
-  .limit(1);
-
-  if (error) {
-    console.error("Erro no Supabase:", error);
-    return;
-  }
-
-  console.log("Supabase conectado!", data);
-}
-
-testarSupabase();
+};
