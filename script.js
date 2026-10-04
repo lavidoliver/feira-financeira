@@ -189,7 +189,18 @@ botaoBuscarSala2.onclick = async function() {
   .eq("numero", Number(numero))
   .single();
 
-  if (error
+  if (error || !data) {
+    mensagemSala2.textContent = "Essa comanda não existe.";
+    return;
+  }
+
+  comandas[numero] = {
+    saldo: data.saldo ?? 3000,
+    total: data.total ?? 0,
+    gastos: data.gastos ?? 0,
+    ganhos: data.ganhos ?? 0,
+    itens: data.itens ?? []
+  };
 
   numeroExibidoSala2.textContent = numero;
 
