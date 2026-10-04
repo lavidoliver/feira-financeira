@@ -8,6 +8,21 @@ const supabaseClient = window.supabase.createClient(
 
 alert("SUPABASE CONECTADO!");
 
+async function testarSupabase() {
+  const { data, error } = await supabaseClient
+  .from("comandas")
+  .select("numero")
+  .limit(1);
+
+  if (error) {
+    alert("ERRO SUPABASE: " + error.message);
+    return;
+  }
+
+  alert("SUPABASE FUNCIONANDO!");
+
+  testarSupabase();
+
 let comandas = {};
 
 const botaoSala1 =
