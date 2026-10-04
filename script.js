@@ -172,7 +172,7 @@ botaoSala2.onclick = function() {
   telaSala2.style.display = "block";
 };
 
-botaoBuscarSala2.onclick = function() {
+botaoBuscarSala2.onclick = async function() {
 
   const numero = campoNumeroSala2.value;
 
@@ -183,10 +183,13 @@ botaoBuscarSala2.onclick = function() {
     return;
   }
 
-  if (!comandas[numero]) {
-    mensagemSala2.textContent = "Essa comanda não existe.";
-    return;
-  }
+  const { data, error } = await supabaseClient
+  .from("comandas")
+  .select("*")
+  .eq("numero", Number(numero))
+  .single();
+
+  if (error
 
   numeroExibidoSala2.textContent = numero;
 
