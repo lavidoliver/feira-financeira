@@ -55,9 +55,26 @@ botaoContinuar.onclick = async function() {
     return;
   }
 
+  let saldoInicial;
+
+  if (Number(numero) >= 1 && Number(numero) <= 10) {
+    saldoInicial = 32000;
+  } else if (Number(numero) >= 11 && Number(numero) <= 20) {
+    saldoInicial = 16000;
+  } else if (Number(numero) >= 21 && Number(numero) <= 30) {
+    saldoInicial = 8000;
+  } else if (Number(numero) >= 31 && Number(numero) <= 40) {
+    saldoInicial = 5000;
+  } else if (Number(numero) >= 41 && Number(numero) <= 50) {
+    saldoInicial = 3000;
+  } else {
+    alert("Número de comanda inválido.");
+    return;
+  }
+
   if (!comandas[numero]) {
     comandas[numero] = {
-      saldo: 3000,
+      saldo: saldoInicial,
       total: 0,
       gastos: 0,
       ganhos: 0,
