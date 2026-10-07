@@ -85,6 +85,7 @@ botaoContinuar.onclick = async function() {
     .from("comandas")
     .insert({
       numero: Number(numero)
+      saldo: saldoInicial 
     });
 
     if (error) {
