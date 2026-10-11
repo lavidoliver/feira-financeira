@@ -6,6 +6,8 @@ const supabaseClient = window.supabase.createClient(
   SUPABASE_KEY
 );
 
+alert("SCRIPT CARREGADO!")
+
 let comandas = {};
 let valorTotal = 0;
 let saldoAtual = 3000;
