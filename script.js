@@ -334,7 +334,7 @@ botaoAdicionarSala2.onclick = function() {
 const botaoSalvarComanda =
 document.querySelector("#salvarComanda");
 
-botaoSalvarComanda.onclick = function() {
+botaoSalvarComanda.onclick = async function() {
 
   const numero = campoNumero.value;
 
@@ -348,6 +348,19 @@ botaoSalvarComanda.onclick = function() {
     total: valorTotal,
     itens: comandas[numero]?.itens||[]
   };
+
+  const { error } = await supabaseClient
+  .from("comandas")
+  .update({
+    saldo: saldoAtual,
+    total: valorTotal
+  })
+  .eq("numero", Number(numero));
+
+  if (error) {
+    alert("ERRO AO SALVAR NO SUPABASE: " + error.message);
+    return;
+  }
 
   alert("Comanda " + numero + " salva com sucesso!");
 
