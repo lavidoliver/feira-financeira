@@ -85,7 +85,6 @@ botaoContinuar.onclick = async function() {
     .from("comandas")
     .insert({
       numero: Number(numero)
-      saldo: saldoInicial
     });
 
     if (error) {
@@ -119,7 +118,7 @@ const total = document.querySelector("#total");
 const saldo = document.querySelector("#saldo");
 
 let valorTotal = 0;
-let saldoAtual = 3000;
+let saldoAtual= 3000;
 
 botaoAdicionar.onclick = function() {
 
