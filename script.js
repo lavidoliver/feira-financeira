@@ -84,7 +84,9 @@ botaoContinuar.onclick = async function() {
     const { error } = await supabaseClient
     .from("comandas")
     .insert({
-      numero: Number(numero)
+      numero: Number(numero),
+      saldo: saldoInicial,
+      total: 0 
     });
 
     if (error) {
