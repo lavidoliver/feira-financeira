@@ -118,9 +118,6 @@ document.querySelector("#listaItens");
 const total = document.querySelector("#total");
 const saldo = document.querySelector("#saldo");
 
-let valorTotal = 0;
-let saldoAtual= 3000;
-
 botaoAdicionar.onclick = function() {
 
   const atividade = campoAtividade.value.trim();
@@ -213,7 +210,7 @@ botaoBuscarSala2.onclick = async function() {
   }
 
   comandas[numero] = {
-    saldo: data.saldo ?? 3000,
+    saldo: data.saldo ?? [saldoInicial],
     total: data.total ?? 0,
     gastos: data.gastos ?? 0,
     ganhos: data.ganhos ?? 0,
