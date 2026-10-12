@@ -1,277 +1,398 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
+<head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Sistema de Comando</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Sistema de Comanda</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com"crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+
   <link rel="stylesheet" href="style.css">
-  </head>
+</head>
 
-  <body>
+<body>
 
-    <div class="container" id="inicio">
+  <!-- TELA INICIAL -->
+  <div class="container inicio" id="inicio">
 
-      <h1>Sistema de <span>Comanda</span></h1>
+    <h1>Sistema de <span>Comanda</span></h1>
 
-      <p>Bem-vindo(a) ao sistema da Feira Financeira!</p>
+    <p>Bem-vindo(a) ao sistema da Feira Financeira!</p>
 
-      <h2>Escolha a sala</h2>
-      
-      <div class="salas">
-      
-        <button class="cardSala" id="sala1">
-      
-          <div class="iconeSala">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      
-              <path
-                d="M12 3V21"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-              />
-      
-              <path
-                d="M17 7H9.5C8.12 7 7 8.12 7 9.5C7 10.88 8.12 12 9.5 12H14.5C15.88 12 17 13.12 17 14.5C17 15.88 15.88 17 14.5 17H7"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-              />
-      
-            </svg>
-          </div>
-      
-          <div class="textoSala">
-            <strong>1º ano</strong>
-            <span>Gasto Consciente</span>
-          </div>
-      
-        </button>
-      
-        <button class="cardSala" id="sala2">
-      
-          <div class="iconeSala">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      
-              <path
-                d="M12 3V21"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-              />
-      
-              <path
-                d="M7 8L12 3L17 8"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-      
-              <path
-                d="M7 16L12 21L17 16"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-      
-            </svg>
-          </div>
-      
-          <div class="textoSala">
-            <strong>2º ano</strong>
-            <span>Ganhar Mais</span>
-          </div>
-      
-        </button>
-      
-        <button class="cardSala" id="sala3">
-      
-          <div class="iconeSala">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      
-              <path
-                d="M4 19L10 13L14 17L21 10"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-      
-              <path
-                d="M16 10H21V15"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-      
-            </svg>
-          </div>
-      
-          <div class="textoSala">
-            <strong>3º ano</strong>
-            <span>Investir Melhor</span>
-          </div>
-      
-        </button>
-      
-      </div>
-      
-      </div>
+    <h2>Escolha a sala</h2>
 
-    <div class="container"id="comanda"style="display:none;">
+    <div class="salas">
 
-      <h1>Nova Comanda</h1>
+      <!-- SALA 1 -->
+      <button class="cardSala" id="sala1" type="button">
 
-      <p>Comece registrando os dados da sua comanda.</p>
+        <div class="iconeSala" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M12 3V21M17 7H9.5C8.12 7 7 8.12 7 9.5C7 10.88 8.12 12 9.5 12H14.5C15.88 12 17 13.12 17 14.5C17 15.88 15.88 17 14.5 17H7"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+          </svg>
+        </div>
 
-      <label for="numero">Número da Comanda:</label>
+        <div class="textoSala">
+          <strong>1º ano</strong>
+          <span>Gasto Consciente</span>
+        </div>
+
+      </button>
+
+      <!-- SALA 2 -->
+      <button class="cardSala" id="sala2" type="button">
+
+        <div class="iconeSala" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M12 3V21M7 8L12 3L17 8M7 16L12 21L17 16"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </div>
+
+        <div class="textoSala">
+          <strong>2º ano</strong>
+          <span>Ganhar Mais</span>
+        </div>
+
+      </button>
+
+      <!-- SALA 3 -->
+      <button class="cardSala" id="sala3" type="button">
+
+        <div class="iconeSala" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M4 19L10 13L14 17L21 10M16 10H21V15"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </div>
+
+        <div class="textoSala">
+          <strong>3º ano</strong>
+          <span>Investir Melhor</span>
+        </div>
+
+      </button>
+
+    </div>
+  </div>
+
+
+  <!-- SALA 1: GASTO CONSCIENTE -->
+  <div
+    class="container telaComanda"
+    id="comanda"
+    style="display: none;"
+  >
+
+    <button
+      class="botaoVoltar"
+      id="voltarSala1"
+      type="button"
+    >
+      ← Voltar às salas
+    </button>
+
+    <h1>Gasto <span>Consciente</span></h1>
+
+    <p>Digite o número da comanda para começar.</p>
+
+    <!-- ABERTURA DA COMANDA -->
+    <div class="buscaComanda">
+
+      <label for="numero">Número da comanda</label>
 
       <input
-      type="number"
-      id="numero"
-      placeholder="Digite o número da comanda"
-      >
-
-      <br><br>
-
-      <p id="mensagem"></p>
-
-      <button id="continuar">Continuar</button>
-
-      <div id="produtos" style="display:none;">
-
-        <h2>Comanda #<span id="numeroComanda"></span></h2>
-
-        <p>Saldo: R$ <span id="saldo">3.000,00</span></p>
-
-        <h3>Adicionar atividade</h3>
-
-        <label for="atividade">Atividade:</label>
-        <input
-        type="text"
-        id="atividade"
-        placeholder="Digite a atividade"
-        >
-
-        <br><br>
-
-        <label for="valor">Valor:</label>
-        <input 
         type="number"
-        id="valor"
-        placeholder="0.00"
-        step="0.01"
-        >
-
-        <br><br>
-
-        <label for="quantidade">Quantidade:</label>
-        <input 
-        type="number"
-        id="quantidade"
-        value="1"
+        id="numero"
+        placeholder="Digite de 1 a 50"
         min="1"
-        >
-
-        <br><br>
-
-        <button id="adicionar">Adicionar</button>
-
-        <hr>
-
-        <h3>Itens da comanda</h3>
-
-        <div id="listaItens"></div>
-
-        <h2>Total: R$ <span id="total">0.00</span></h2>
-
-        <br>
-
-        <button id="salvarComanda">Salvar e sair</button>
-
-    </div>
-
-    </div>
-
-    <div class="container"id="sala2Tela" style="display: none">
-
-      <h1>2º ano - Ganhar Mais</h1>
-
-      <p>Digite o número de uma comanda já existente:</p>
-
-      <input 
-      type="number"
-      id="numeroComandaSala2"
-      placeholder="Número da comanda"
+        max="50"
       >
 
-      <br><br>
+      <button id="continuar" type="button">
+        Abrir comanda
+      </button>
 
-      <button id="buscarComandaSala2">Continuar</button>
+      <p
+        id="mensagem"
+        class="mensagem"
+        aria-live="polite"
+      ></p>
 
-      <p id="mensagemSala2"></p>
+    </div>
 
-      <div id="itensSala2" style="display: none;">
 
-        <h2>Comanda <span id="numeroExibidoSala2"></span></h2>
+    <!-- CONTEÚDO DA COMANDA -->
+    <div id="produtos" style="display: none;">
 
-        <p>Saldo: R$ <span id="saldoSala2">0.00</span></p>
+      <div class="cabecalhoComanda">
 
-        <p>Total ganho: R$ <span id="totalSala2">0.00</span></p>
+        <div>
+
+          <p class="sobretitulo">FEIRA FINANCEIRA</p>
+
+          <h2>
+            Comanda #<span id="numeroComanda"></span>
+          </h2>
+
+          <p class="textoAuxiliar">
+            Escolha como distribuir seu dinheiro.
+            Cada decisão afeta seu saldo.
+          </p>
+
+        </div>
+
+        <div class="saldoBox">
+
+          <span>Saldo disponível</span>
+
+          <strong>
+            R$ <span id="saldo">0,00</span>
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <!-- CARTÕES DE COMPRAS -->
+      <div id="cartoesCategorias"></div>
+
+      <p
+        id="mensagemCartoes"
+        class="mensagem mensagemCartoes"
+        aria-live="polite"
+      ></p>
+
+
+      <!-- RESUMO DAS COMPRAS -->
+      <section class="resumoComanda">
+
+        <div class="resumoTopo">
+
+          <div>
+
+            <span>Total de gastos</span>
+
+            <strong>
+              R$ <span id="total">0,00</span>
+            </strong>
+
+          </div>
+
+          <p>
+            Confira suas escolhas antes de salvar.
+          </p>
+
+        </div>
+
+        <h3>Resumo das movimentações</h3>
+
+        <div id="listaItens">
+          <p>Nenhuma compra registrada nesta comanda.</p>
+        </div>
+
+        <button id="salvarComanda" type="button">
+          Salvar comanda e sair
+        </button>
+
+      </section>
+
+    </div>
+
+  </div>
+
+
+  <!-- SALA 2: GANHAR MAIS -->
+  <div
+    class="container telaSala2"
+    id="sala2Tela"
+    style="display: none;"
+  >
+
+    <button
+      class="botaoVoltar"
+      id="voltarSala2"
+      type="button"
+    >
+      ← Voltar às salas
+    </button>
+
+    <h1>Ganhar <span>Mais</span></h1>
+
+    <p>Digite o número de uma comanda já existente.</p>
+
+
+    <!-- BUSCA DA COMANDA -->
+    <div class="buscaComanda">
+
+      <label for="numeroComandaSala2">
+        Número da comanda
+      </label>
+
+      <input
+        type="number"
+        id="numeroComandaSala2"
+        placeholder="Número da comanda"
+        min="1"
+        max="50"
+      >
+
+      <button id="buscarComandaSala2" type="button">
+        Abrir comanda
+      </button>
+
+      <p
+        id="mensagemSala2"
+        class="mensagem"
+        aria-live="polite"
+      ></p>
+
+    </div>
+
+
+    <!-- MOVIMENTAÇÕES DA SALA 2 -->
+    <div id="itensSala2" style="display: none;">
+
+      <div class="cabecalhoComanda">
+
+        <div>
+
+          <p class="sobretitulo">FEIRA FINANCEIRA</p>
+
+          <h2>
+            Comanda #<span id="numeroExibidoSala2"></span>
+          </h2>
+
+        </div>
+
+        <div class="saldoBox">
+
+          <span>Saldo disponível</span>
+
+          <strong>
+            R$ <span id="saldoSala2">0,00</span>
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <p class="totalGanho">
+        Total ganho:
+        R$ <strong id="totalSala2">0,00</strong>
+      </p>
+
+
+      <!-- FORMULÁRIO PARA REGISTRAR GANHOS -->
+      <section class="formGanho">
 
         <h3>Registrar ganho</h3>
 
-        <input 
-        type="text"
-        id="atividadeSala2"
-        placeholder="Como você ganhou esse dinheiro?"
+        <label for="atividadeSala2">
+          Como você ganhou esse dinheiro?
+        </label>
+
+        <input
+          type="text"
+          id="atividadeSala2"
+          placeholder="Ex.: trabalho temporário"
         >
 
-        <br><br>
+        <div class="camposGanho">
 
-        <input 
-        type="number"
-        id="valorSala2"
-        placeholder="Valor"
-        step="0.01"
-        >
+          <div>
 
-        <br><br>
+            <label for="valorSala2">
+              Valor por unidade (R$)
+            </label>
 
-        <input 
-        type="number"
-        id="quantidadeSala2"
-        placeholder="Quantidade"
-        min="1"
-        >
+            <input
+              type="number"
+              id="valorSala2"
+              placeholder="0,00"
+              min="0.01"
+              step="0.01"
+            >
 
-        <br><br>
+          </div>
 
-        <button id="adicionarSala2">Adicionar</button>
+          <div>
 
-        <h3>Itens adicionados</h3>
+            <label for="quantidadeSala2">
+              Quantidade
+            </label>
 
-        <div id="listaItensSala2">
-          <p>Nenhum item adicionado.</p>
+            <input
+              type="number"
+              id="quantidadeSala2"
+              value="1"
+              min="1"
+              step="1"
+            >
+
+          </div>
+
         </div>
 
-        <br>
+        <button id="adicionarSala2" type="button">
+          Adicionar ganho
+        </button>
 
-        <button id="salvarSala2">Salvar e sair</button>
+      </section>
 
-      </div>
+
+      <!-- HISTÓRICO -->
+      <section class="resumoComanda">
+
+        <h3>Movimentações da comanda</h3>
+
+        <div id="listaItensSala2">
+          <p>Nenhuma movimentação registrada.</p>
+        </div>
+
+        <button id="salvarSala2" type="button">
+          Salvar comanda e sair
+        </button>
+
+      </section>
 
     </div>
 
-    <script
-    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="script.js?v=5"></script>
+  </div>
 
-  </body>
+
+  <!-- CONEXÃO COM O SUPABASE -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- JAVASCRIPT DO SISTEMA -->
+  <script src="script.js?v=6"></script>
+
+</body>
 </html>
