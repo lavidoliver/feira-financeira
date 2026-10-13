@@ -201,46 +201,16 @@ async function carregarComandasSala3() {
     );
 
     comandas.forEach(function (comanda) {
-      const cartao = document.createElement("button");
+  const cartao = document.createElement("button");
 
-      cartao.type = "button";
-      cartao.className = "cardSala";
+  cartao.type = "button";
+  cartao.className = "cardSala";
 
-      const numeroFormatado = String(comanda.numero).padStart(3, "0");
-
-      const titulo = document.createElement("strong");
-      titulo.textContent = "Comanda #" + numeroFormatado;
-
-      const saldo = document.createElement("span");
-      saldo.textContent = "Saldo atual: " + dinheiro(comanda.saldo);
-
-      cartao.appendChild(titulo);
-      cartao.appendChild(document.createElement("br"));
-      cartao.appendChild(saldo);
-
-      cartao.addEventListener("click", function () {
-        mostrarDetalhesComandaSala3(comanda);
-      });
-
-      listaComandasSala3.appendChild(cartao);
-    });
-
-  } catch (erro) {
-    console.error("Erro ao carregar comandas da Sala 3:", erro);
-
-    definirMensagem(
-      mensagemSala3,
-      "Não foi possível carregar as comandas. Tente novamente."
-    );
-  }
-}
-
-function mostrarDetalhesComandaSala3(comanda) {
+  const numero = Number(comanda.numero);
   const itens = Array.isArray(comanda.itens)
     ? comanda.itens
     : [];
 
-  const numero = Number(comanda.numero);
   const saldoInicialComanda = obterSaldoInicial(numero);
   const saldoAtualComanda = Number(comanda.saldo ?? 0);
 
@@ -260,52 +230,90 @@ function mostrarDetalhesComandaSala3(comanda) {
       return soma + Number(item.total ?? item.valor ?? 0);
     }, 0);
 
-  numeroDetalhesSala3.textContent = String(numero).padStart(3, "0");
+  cartao.innerHTML = `
+    <span class="numeroComandaSala3">
+      COMANDA #${String(numero).padStart(3, "0")}
+    </span>
 
-  resumoFinanceiroSala3.innerHTML = `
-    <div>
+    <div class="indicadorSala3">
       <span>Saldo inicial</span>
       <strong>${dinheiro(saldoInicialComanda)}</strong>
     </div>
 
-    <div>
-      <span>Saldo atual</span>
-      <strong>${dinheiro(saldoAtualComanda)}</strong>
-    </div>
-
-    <div>
+    <div class="indicadorSala3">
       <span>Total gasto</span>
       <strong>${dinheiro(totalGastoComanda)}</strong>
     </div>
 
-    <div>
+    <div class="indicadorSala3">
       <span>Total ganho</span>
       <strong>${dinheiro(totalGanhoComanda)}</strong>
     </div>
+
+    <div class="saldoAtualSala3">
+      <span>SALDO ATUAL</span>
+      <strong>${dinheiro(saldoAtualComanda)}</strong>
+    </div>
   `;
+
+  cartao.addEventListener("click", function () {
+    mostrarHistoricoComandaSala3(comanda);
+  });
+
+  listaComandasSala3.appendChild(cartao);
+});
+
+  } catch (erro) {
+    console.error("Erro ao carregar comandas da Sala 3:", erro);
+
+    definirMensagem(
+      mensagemSala3,
+      "Não foi possível carregar as comandas. Tente novamente."
+    );
+  }
+}
+
+function mostrarHistoricoComandaSala3(comanda) {
+  const itens = Array.isArray(comanda.itens)
+    ? comanda.itens
+    : [];
+
+  const numero = Number(comanda.numero);
+
+  numeroDetalhesSala3.textContent =
+    String(numero).padStart(3, "0");
+
+  // Os indicadores financeiros já aparecem nos cartões.
+  // Na área de detalhes, exibimos somente o histórico.
+  resumoFinanceiroSala3.style.display = "none";
+  resumoFinanceiroSala3.innerHTML = "";
 
   historicoSala3.innerHTML = "";
 
   if (itens.length === 0) {
-    historicoSala3.textContent =
+    const mensagemHistorico = document.createElement("p");
+
+    mensagemHistorico.textContent =
       "Nenhuma atividade foi registrada nesta comanda.";
+
+    historicoSala3.appendChild(mensagemHistorico);
   } else {
     itens.forEach(function (item) {
       const linha = document.createElement("div");
       const nome = document.createElement("span");
       const valor = document.createElement("strong");
-      const quantidade = Number(item.quantidade ?? 1);
 
-      const tipo = item.tipo === "ganho" ? "Ganho" : "Gasto";
-      const sinal = item.tipo === "ganho" ? "+" : "−";
+      const quantidade = Number(item.quantidade ?? 1);
+      const ehGanho = item.tipo === "ganho";
 
       nome.textContent =
-        tipo + ": " +
+        (ehGanho ? "Ganho: " : "Gasto: ") +
         (item.atividade || item.categoria || "Movimentação") +
         " | Quantidade: " + quantidade;
 
       valor.textContent =
-        sinal + " " + dinheiro(item.total ?? item.valor ?? 0);
+        (ehGanho ? "+ " : "− ") +
+        dinheiro(item.total ?? item.valor ?? 0);
 
       linha.appendChild(nome);
       linha.appendChild(valor);
