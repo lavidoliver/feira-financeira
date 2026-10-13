@@ -152,44 +152,51 @@ voltarSala2.addEventListener("click", mostrarInicio);
 
 const categorias = [
   {
-    id: "alimentacao",
-    titulo: "Alimentação",
-    descricao: "Planeje seus gastos com alimentos.",
-    icone: "🍎",
-    tipo: "orcamento",
-    incremento: 50
+    id: "casa",
+    titulo: "Casa",
+    descricao: "Adicione uma unidade ao seu planejamento.",
+    icone: "🏠",
+    tipo: "moradia",
+    valor: 8000
   },
   {
-    id: "farmacia",
-    titulo: "Medicamentos",
-    descricao: "Reserve dinheiro para medicamentos.",
-    icone: "💊",
-    tipo: "orcamento",
-    incremento: 50
+    id: "apartamento",
+    titulo: "Apartamento",
+    descricao: "Adicione uma unidade ao seu planejamento.",
+    icone: "🏬",
+    tipo: "moradia",
+    valor: 5000
   },
   {
-    id: "higiene",
-    titulo: "Higiene Pessoal",
-    descricao: "Cuide dos produtos essenciais.",
-    icone: "🧴",
-    tipo: "orcamento",
-    incremento: 50
+    id: "studio",
+    titulo: "Studio",
+    descricao: "Adicione uma unidade ao seu planejamento.",
+    icone: "🏢",
+    tipo: "moradia",
+    valor: 2000
   },
   {
-    id: "roupas",
-    titulo: "Vestuário",
-    descricao: "Defina quanto deseja gastar com vestuário.",
-    icone: "👕",
-    tipo: "orcamento",
-    incremento: 50
+    id: "moradiaLocacao",
+    titulo: "Moradia de Locação",
+    descricao: "Escolha a moradia que deseja alugar.",
+    icone: "🏘️",
+    tipo: "opcoes",
+    opcoes: [
+      { nome: "Aluguel de: ", valor: 200 },
+      { nome: "Aluguel de: ", valor: 350 },
+      { nome: "Aluguel de: ", valor: 500 }
+    ]
   },
   {
-    id: "transportePublico",
-    titulo: "Transporte Público",
-    descricao: "Adicione valores para transporte público.",
-    icone: "🚌",
-    tipo: "orcamento",
-    incremento: 50
+    id: "seguroMoradia",
+    titulo: "Seguro de Moradia",
+    descricao: "Escolha uma cobertura.",
+    icone: "🏠",
+    tipo: "opcoes",
+    opcoes: [
+      { nome: "Plano básico", valor: 150 },
+      { nome: "Plano completo", valor: 300 }
+    ]
   },
   {
     id: "veiculo",
@@ -216,15 +223,12 @@ const categorias = [
     ]
   },
   {
-    id: "seguroMoradia",
-    titulo: "Seguro de Moradia",
-    descricao: "Escolha uma cobertura.",
-    icone: "🏠",
-    tipo: "opcoes",
-    opcoes: [
-      { nome: "Plano básico", valor: 100 },
-      { nome: "Plano completo", valor: 200 }
-    ]
+    id: "transportePublico",
+    titulo: "Transporte Público",
+    descricao: "Reserve dinheiro para transporte público.",
+    icone: "🚌",
+    tipo: "orcamento",
+    incremento: 50
   },
   {
     id: "seguroCarro",
@@ -238,6 +242,38 @@ const categorias = [
     ]
   },
   {
+    id: "alimentacao",
+    titulo: "Alimentação",
+    descricao: "Planeje seus gastos com alimentos.",
+    icone: "🍎",
+    tipo: "orcamento",
+    incremento: 50
+  },
+  {
+    id: "higiene",
+    titulo: "Higiene Pessoal",
+    descricao: "Cuide dos produtos essenciais.",
+    icone: "🧴",
+    tipo: "orcamento",
+    incremento: 50
+  },
+  {
+    id: "roupas",
+    titulo: "Vestuário",
+    descricao: "Defina o quanto deseja gastar com vestuário.",
+    icone: "👕",
+    tipo: "orcamento",
+    incremento: 50
+  },
+  {
+    id: "farmacia",
+    titulo: "Medicamentos",
+    descricao: "Reserve dinheiro para medicamentos.",
+    icone: "💊",
+    tipo: "orcamento",
+    incremento: 50
+  },
+  {
     id: "convenio",
     titulo: "Convênio Médico",
     descricao: "Escolha seu plano de saúde.",
@@ -248,30 +284,6 @@ const categorias = [
       { nome: "Plano intermediário", valor: 250 },
       { nome: "Plano completo", valor: 400 }
     ]
-  },
-  {
-    id: "studio",
-    titulo: "Studio",
-    descricao: "Adicione uma unidade ao seu planejamento.",
-    icone: "🏢",
-    tipo: "moradia",
-    valor: 2000
-  },
-  {
-    id: "apartamento",
-    titulo: "Apartamento",
-    descricao: "Adicione uma unidade ao seu planejamento.",
-    icone: "🏬",
-    tipo: "moradia",
-    valor: 5000
-  },
-  {
-    id: "casa",
-    titulo: "Casa",
-    descricao: "Adicione uma unidade ao seu planejamento.",
-    icone: "🏡",
-    tipo: "moradia",
-    valor: 8000
   }
 ];
 
