@@ -791,3 +791,61 @@ p {
     padding: 14px 8px;
   }
 }
+
+/* ORGANIZAÇÃO DOS INDICADORES FINANCEIROS */
+#listaComandasSala3 .cardSala {
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 12px;
+  text-align: left !important;
+}
+
+/* NÚMERO DA COMANDA */
+#listaComandasSala3 .numeroComandaSala3 {
+  font-weight: 800;
+  font-size: 1rem;
+  text-align: center;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+/* SALDO INICIAL, GASTOS E GANHOS */
+#listaComandasSala3 .indicadorSala3 {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+#listaComandasSala3 .indicadorSala3 span {
+  font-size: 0.78rem;
+  opacity: 0.8;
+}
+
+#listaComandasSala3 .indicadorSala3 strong {
+  font-size: 0.95rem;
+  overflow-wrap: anywhere;
+}
+
+/* SALDO ATUAL EM DESTAQUE */
+#listaComandasSala3 .saldoAtualSala3 {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: auto;
+  padding: 12px 10px;
+  border-radius: 10px;
+  background: #fce8e8;
+  border: 1px solid #e8baba;
+}
+
+#listaComandasSala3 .saldoAtualSala3 span {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+#listaComandasSala3 .saldoAtualSala3 strong {
+  font-size: 1.1rem;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
