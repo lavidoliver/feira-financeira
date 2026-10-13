@@ -205,9 +205,6 @@ async function carregarComandasSala3() {
 
       cartao.type = "button";
       cartao.className = "cardSala";
-      cartao.style.width = "100%";
-      cartao.style.marginBottom = "12px";
-      cartao.style.textAlign = "left";
 
       const numeroFormatado = String(comanda.numero).padStart(3, "0");
 
