@@ -19,7 +19,6 @@
 
 <body>
 
-  <!-- TELA INICIAL -->
   <div class="container inicio" id="inicio">
 
     <h1>Sistema de <span>Comanda</span></h1>
@@ -30,7 +29,6 @@
 
     <div class="salas">
 
-      <!-- SALA 1 -->
       <button class="cardSala" id="sala1" type="button">
 
         <div class="iconeSala" aria-hidden="true">
@@ -52,7 +50,6 @@
 
       </button>
 
-      <!-- SALA 2 -->
       <button class="cardSala" id="sala2" type="button">
 
         <div class="iconeSala" aria-hidden="true">
@@ -75,7 +72,6 @@
 
       </button>
 
-      <!-- SALA 3 -->
       <button class="cardSala" id="sala3" type="button">
 
         <div class="iconeSala" aria-hidden="true">
@@ -384,6 +380,71 @@
       </section>
 
     </div>
+
+  </div>
+
+  <!-- SALA 3: INVESTIR MELHOR -->  
+  <div
+    class="container telaSala3"
+    id="sala3Tela"
+    style="display: none;"
+  >
+    <button
+  class="botaoVoltar"
+  id="voltarSala3"
+  type="button"
+>
+  ← Voltar às salas
+</button>
+
+<h1>Investir <span>Melhor</span></h1>
+
+<p>
+  Consulte as comandas abertas e veja como cada pessoa
+  utilizou seu dinheiro ao longo da Feira Financeira.
+</p>
+
+<!-- MENSAGEM DE CARREGAMENTO OU ERRO -->
+<p
+  id="mensagemSala3"
+  class="mensagem"
+  aria-live="polite"
+>
+  Carregando comandas...
+</p>
+
+<!-- LISTA DE COMANDAS JÁ ABERTAS -->
+<section class="resumoComanda">
+
+  <h2>Comandas abertas</h2>
+
+  <p class="textoAuxiliar">
+    Selecione uma comanda para consultar seu saldo
+    e o histórico completo de movimentações.
+  </p>
+
+  <div id="listaComandasSala3"></div>
+
+</section>
+
+<!-- DETALHES DA COMANDA SELECIONADA -->
+<section
+  class="resumoComanda"
+  id="detalhesComandaSala3"
+  style="display: none;"
+>
+
+  <h2>
+    Detalhes da comanda #<span id="numeroDetalhesSala3"></span>
+  </h2>
+
+  <div id="resumoFinanceiroSala3"></div>
+
+  <h3>Histórico de atividades</h3>
+
+  <div id="historicoSala3"></div>
+
+</section>
 
   </div>
 
