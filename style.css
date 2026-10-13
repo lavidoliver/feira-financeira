@@ -730,63 +730,64 @@ p {
   }
 }
 
-/* GRADE DE COMANDAS DA SALA 3 */
+/* GRADE DE COMANDAS */
 #listaComandasSala3 {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  display: grid !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
   gap: 16px;
+  width: 100%;
   margin-top: 20px;
   align-items: stretch;
 }
 
-/* CARTÕES VERTICAIS DAS COMANDAS */
+/* CARTÕES VERTICAIS */
 #listaComandasSala3 .cardSala {
-  box-sizing: border-box;
-  width: 100%;
-  min-width: 0;
-  min-height: 170px;
-  margin: 0;
-  padding: 20px 12px;
-
-  display: flex;
+  display: flex !important;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  width: 100% !important;
+  min-width: 0;
+  min-height: 170px;
+  margin: 0 !important;
+  padding: 20px 10px;
   gap: 14px;
 
-  text-align: center;
+  box-sizing: border-box;
+  text-align: center !important;
   overflow-wrap: anywhere;
 }
 
 /* NÚMERO DA COMANDA */
 #listaComandasSala3 .cardSala strong {
   display: block;
-  font-size: 1.15rem;
+  font-size: 1.1rem;
 }
 
-/* SALDO DA COMANDA */
+/* SALDO */
 #listaComandasSala3 .cardSala span {
   display: block;
   font-size: 0.9rem;
   line-height: 1.5;
 }
 
-/* TABLETS E TELAS MÉDIAS */
+/* TABLETS */
 @media (max-width: 900px) {
   #listaComandasSala3 {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
   }
 }
 
 /* CELULARES */
 @media (max-width: 550px) {
   #listaComandasSala3 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 10px;
   }
 
   #listaComandasSala3 .cardSala {
-    min-height: 150px;
-    padding: 16px 8px;
+    min-height: 145px;
+    padding: 14px 8px;
   }
 }
