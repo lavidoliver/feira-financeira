@@ -1,422 +1,1065 @@
+// ============================================
+// CONFIGURAÇÃO DO SUPABASE
+// ============================================
+
 const SUPABASE_URL = "https://celgectqwcsdoczkfnin.supabase.co";
+
 const SUPABASE_KEY = "sb_publishable_kKyXJsshfC40IaLh-FFhCQ_TIoeupXn";
 
-const supabaseClient = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
+let supabaseClient = null;
+
+if (window.supabase) {
+  supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
   );
-
-alert("SUPABASE CONECTADO!");
-
-async function testarSupabase() {
-  const { data, error } = await supabaseClient
-  .from("comandas")
-  .select("numero")
-  .limit(1);
-
-  if (error) {
-    alert("ERRO SUPABASE: " + error.message);
-    return;
-  }
-
-  alert("SUPABASE FUNCIONANDO!");
 }
 
-  testarSupabase();
+console.log("SCRIPT CARREGADO!");
 
-let comandas = {};
 
-const botaoSala1 =
-document.querySelector("#sala1");
-const telaInicio = 
-document.querySelector("#inicio");
-const telaComanda =
-document.querySelector("#comanda");
+// ============================================
+// ELEMENTOS HTML
+// ============================================
 
-botaoSala1.onclick = function() {
-  telaInicio.style.display = "none";
-  telaComanda.style.display = "block";
-};
+const inicio = document.getElementById("inicio");
+const telaSala1 = document.getElementById("comanda");
+const telaSala2 = document.getElementById("sala2Tela");
 
-const botaoContinuar = 
-document.querySelector("#continuar");
-const campoNumero =
-document.querySelector("#numero");
-const areaProdutos =
-document.querySelector("#produtos");
-const numeroComanda =
-document.querySelector("#numeroComanda");
+const botaoSala1 = document.getElementById("sala1");
+const botaoSala2 = document.getElementById("sala2");
+const botaoSala3 = document.getElementById("sala3");
 
-botaoContinuar.onclick = async function() {
+const voltarSala1 = document.getElementById("voltarSala1");
+const voltarSala2 = document.getElementById("voltarSala2");
 
-  const numero = campoNumero.value;
+const campoNumero = document.getElementById("numero");
+const botaoContinuar = document.getElementById("continuar");
+const mensagem = document.getElementById("mensagem");
 
-  if (numero === "") {
-    return;
+const produtos = document.getElementById("produtos");
+const numeroComanda = document.getElementById("numeroComanda");
+const saldoElemento = document.getElementById("saldo");
+const totalElemento = document.getElementById("total");
+const cartoesCategorias = document.getElementById("cartoesCategorias");
+const listaItens = document.getElementById("listaItens");
+const botaoSalvar = document.getElementById("salvarComanda");
+const mensagemCartoes = document.getElementById("mensagemCartoes");
+
+const campoNumeroSala2 = document.getElementById("numeroComandaSala2");
+const botaoBuscarSala2 = document.getElementById("buscarComandaSala2");
+const mensagemSala2 = document.getElementById("mensagemSala2");
+const itensSala2 = document.getElementById("itensSala2");
+const numeroExibidoSala2 = document.getElementById("numeroExibidoSala2");
+const saldoSala2Elemento = document.getElementById("saldoSala2");
+const totalSala2Elemento = document.getElementById("totalSala2");
+
+const campoAtividadeSala2 = document.getElementById("atividadeSala2");
+const campoValorSala2 = document.getElementById("valorSala2");
+const campoQuantidadeSala2 = document.getElementById("quantidadeSala2");
+const botaoAdicionarSala2 = document.getElementById("adicionarSala2");
+const listaItensSala2 = document.getElementById("listaItensSala2");
+const botaoSalvarSala2 = document.getElementById("salvarSala2");
+
+
+// ============================================
+// ESTADO DO SISTEMA
+// ============================================
+
+let comandaAtual = null;
+let numeroAtual = null;
+
+let saldoInicial = 0;
+let saldoAtual = 0;
+let totalGasto = 0;
+
+let movimentacoes = [];
+let selecoes = {};
+
+let comandaSala2Atual = null;
+let movimentacoesSala2 = [];
+
+
+// ============================================
+// CONFIGURAÇÃO DAS COMANDAS
+// ============================================
+
+function obterSaldoInicial(numero) {
+  if (numero >= 1 && numero <= 10) {
+    return 32000;
   }
 
-  let saldoInicial;
-
-  if (Number(numero) >= 1 && Number(numero) <= 10) {
-    saldoInicial = 32000;
-  } else if (Number(numero) >= 11 && Number(numero) <= 20) {
-    saldoInicial = 16000;
-  } else if (Number(numero) >= 21 && Number(numero) <= 30) {
-    saldoInicial = 8000;
-  } else if (Number(numero) >= 31 && Number(numero) <= 40) {
-    saldoInicial = 5000;
-  } else if (Number(numero) >= 41 && Number(numero) <= 50) {
-    saldoInicial = 3000;
-  } else {
-    alert("Número de comanda inválido.");
-    return;
+  if (numero >= 11 && numero <= 20) {
+    return 16000;
   }
 
-  if (!comandas[numero]) {
-    comandas[numero] = {
-      saldo: saldoInicial,
-      total: 0,
-      gastos: 0,
-      ganhos: 0,
-      itens: []
+  if (numero >= 21 && numero <= 30) {
+    return 8000;
+  }
+
+  if (numero >= 31 && numero <= 40) {
+    return 5000;
+  }
+
+  if (numero >= 41 && numero <= 50) {
+    return 3000;
+  }
+
+  return null;
+}
+
+
+// ============================================
+// FORMATAÇÃO DE VALORES
+// ============================================
+
+function formatarDinheiro(valor) {
+  return Number(valor || 0).toLocaleString("pt-BR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+}
+
+function dinheiro(valor) {
+  return "R$ " + formatarDinheiro(valor);
+}
+
+function escaparHTML(valor) {
+  return String(valor ?? "").replace(/[&<>"']/g, function (caractere) {
+    const mapa = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
     };
 
-    const { error } = await supabaseClient
-    .from("comandas")
-    .insert({
-      numero: Number(numero),
-      saldo: saldoInicial,
-      total: 0 
-    });
+    return mapa[caractere];
+  });
+}
 
-    if (error) {
-      alert("ERRO AO CRIAR COMANDA: " + error.message);
+function definirMensagem(elemento, texto) {
+  if (elemento) {
+    elemento.textContent = texto;
+  }
+}
+
+
+// ============================================
+// NAVEGAÇÃO ENTRE AS SALAS
+// ============================================
+
+function mostrarInicio() {
+  inicio.style.display = "block";
+  telaSala1.style.display = "none";
+  telaSala2.style.display = "none";
+}
+
+function mostrarSala1() {
+  inicio.style.display = "none";
+  telaSala1.style.display = "block";
+  telaSala2.style.display = "none";
+}
+
+function mostrarSala2() {
+  inicio.style.display = "none";
+  telaSala1.style.display = "none";
+  telaSala2.style.display = "block";
+}
+
+botaoSala1.addEventListener("click", mostrarSala1);
+
+botaoSala2.addEventListener("click", mostrarSala2);
+
+botaoSala3.addEventListener("click", function () {
+  alert("A sala Investir Melhor será implementada posteriormente.");
+});
+
+voltarSala1.addEventListener("click", mostrarInicio);
+
+voltarSala2.addEventListener("click", mostrarInicio);
+
+
+// ============================================
+// CARTÕES DA SALA 1
+// ============================================
+
+const categorias = [
+  {
+    id: "alimentacao",
+    titulo: "Alimentação",
+    descricao: "Planeje seus gastos com alimentos.",
+    icone: "🍎",
+    tipo: "orcamento",
+    incremento: 50
+  },
+  {
+    id: "farmacia",
+    titulo: "Farmácia",
+    descricao: "Reserve dinheiro para medicamentos.",
+    icone: "💊",
+    tipo: "orcamento",
+    incremento: 50
+  },
+  {
+    id: "higiene",
+    titulo: "Higiene básica",
+    descricao: "Cuide dos produtos essenciais.",
+    icone: "🧴",
+    tipo: "orcamento",
+    incremento: 50
+  },
+  {
+    id: "roupas",
+    titulo: "Roupas",
+    descricao: "Defina quanto deseja gastar.",
+    icone: "👕",
+    tipo: "orcamento",
+    incremento: 50
+  },
+  {
+    id: "bilhete",
+    titulo: "Bilhete Único",
+    descricao: "Adicione valores para transporte público.",
+    icone: "🚌",
+    tipo: "orcamento",
+    incremento: 50
+  },
+  {
+    id: "uber",
+    titulo: "Uber",
+    descricao: "Reserve dinheiro para corridas.",
+    icone: "🚗",
+    tipo: "orcamento",
+    incremento: 50
+  },
+  {
+    id: "veiculo",
+    titulo: "Veículo próprio",
+    descricao: "Escolha o veículo que deseja adquirir.",
+    icone: "🚘",
+    tipo: "opcoes",
+    opcoes: [
+      { nome: "Carro popular usado", valor: 4000 },
+      { nome: "Carro seminovo", valor: 6000 },
+      { nome: "Carro novo", valor: 8000 }
+    ]
+  },
+  {
+    id: "bicicleta",
+    titulo: "Bicicleta",
+    descricao: "Escolha uma opção de bicicleta.",
+    icone: "🚲",
+    tipo: "opcoes",
+    opcoes: [
+      { nome: "Bicicleta básica", valor: 300 },
+      { nome: "Bicicleta intermediária", valor: 600 },
+      { nome: "Bicicleta premium", valor: 1000 }
+    ]
+  },
+  {
+    id: "seguroMoradia",
+    titulo: "Seguro de moradia",
+    descricao: "Escolha uma cobertura.",
+    icone: "🏠",
+    tipo: "opcoes",
+    opcoes: [
+      { nome: "Plano básico", valor: 100 },
+      { nome: "Plano completo", valor: 200 }
+    ]
+  },
+  {
+    id: "seguroCarro",
+    titulo: "Seguro de carro",
+    descricao: "Escolha uma cobertura.",
+    icone: "🛡️",
+    tipo: "opcoes",
+    opcoes: [
+      { nome: "Plano básico", valor: 150 },
+      { nome: "Plano completo", valor: 300 }
+    ]
+  },
+  {
+    id: "convenio",
+    titulo: "Convênio médico",
+    descricao: "Escolha seu plano de saúde.",
+    icone: "🏥",
+    tipo: "opcoes",
+    opcoes: [
+      { nome: "Plano básico", valor: 150 },
+      { nome: "Plano intermediário", valor: 250 },
+      { nome: "Plano completo", valor: 400 }
+    ]
+  },
+  {
+    id: "studio",
+    titulo: "Studio",
+    descricao: "Adicione uma unidade ao seu planejamento.",
+    icone: "🏢",
+    tipo: "moradia",
+    valor: 2000
+  },
+  {
+    id: "apartamento",
+    titulo: "Apartamento",
+    descricao: "Adicione uma unidade ao seu planejamento.",
+    icone: "🏬",
+    tipo: "moradia",
+    valor: 5000
+  },
+  {
+    id: "casa",
+    titulo: "Casa",
+    descricao: "Adicione uma unidade ao seu planejamento.",
+    icone: "🏡",
+    tipo: "moradia",
+    valor: 8000
+  }
+];
+
+
+// ============================================
+// CRIAÇÃO DOS CARTÕES
+// ============================================
+
+function criarCartoes() {
+  cartoesCategorias.innerHTML = "";
+
+  categorias.forEach(function (categoria) {
+    const cartao = document.createElement("article");
+
+    cartao.className = "categoria";
+    cartao.dataset.categoria = categoria.id;
+
+    const titulo = document.createElement("h3");
+    titulo.textContent = categoria.icone + " " + categoria.titulo;
+
+    const descricao = document.createElement("p");
+    descricao.textContent = categoria.descricao;
+
+    cartao.appendChild(titulo);
+    cartao.appendChild(descricao);
+
+    if (categoria.tipo === "orcamento") {
+      criarControleOrcamento(cartao, categoria);
+    } else if (categoria.tipo === "opcoes") {
+      criarOpcoes(cartao, categoria);
+    } else if (categoria.tipo === "moradia") {
+      criarControleMoradia(cartao, categoria);
+    }
+
+    cartoesCategorias.appendChild(cartao);
+  });
+}
+
+function criarControleOrcamento(cartao, categoria) {
+  const controles = document.createElement("div");
+  controles.className = "controlesQuantidade";
+
+  const botaoMenos = document.createElement("button");
+  botaoMenos.type = "button";
+  botaoMenos.className = "menos";
+  botaoMenos.textContent = "−";
+  botaoMenos.setAttribute("aria-label", "Diminuir " + categoria.titulo);
+
+  const valor = document.createElement("span");
+  valor.className = "quantidade";
+  valor.textContent = "0";
+
+  const botaoMais = document.createElement("button");
+  botaoMais.type = "button";
+  botaoMais.className = "mais";
+  botaoMais.textContent = "+";
+  botaoMais.setAttribute("aria-label", "Aumentar " + categoria.titulo);
+
+  botaoMenos.addEventListener("click", function () {
+    const atual = selecoes[categoria.id] || 0;
+
+    selecoes[categoria.id] = Math.max(
+      0,
+      atual - categoria.incremento
+    );
+
+    valor.textContent = dinheiro(selecoes[categoria.id]);
+    atualizarResumo();
+  });
+
+  botaoMais.addEventListener("click", function () {
+    const atual = selecoes[categoria.id] || 0;
+    const proximo = atual + categoria.incremento;
+
+    if (proximo > saldoInicial) {
+      definirMensagem(
+        mensagemCartoes,
+        "Esse valor ultrapassa o saldo inicial da comanda."
+      );
       return;
     }
-  }
 
-  numeroComanda.textContent = numero;
+    selecoes[categoria.id] = proximo;
+    valor.textContent = dinheiro(proximo);
 
-  saldoAtual = comandas[numero].saldo;
-  valorTotal = comandas[numero].total;
-
-  saldo.textContent = saldoAtual.toFixed(2);
-  total.textContent = valorTotal.toFixed(2);
-
-  areaProdutos.style.display = "block"
-};
-
-const botaoAdicionar =
-document.querySelector("#adicionar");
-const campoAtividade =
-document.querySelector("#atividade");
-const campoValor =
-document.querySelector("#valor");
-const campoQuantidade =
-document.querySelector("#quantidade");
-const listaItens =
-document.querySelector("#listaItens");
-const total = document.querySelector("#total");
-const saldo = document.querySelector("#saldo");
-
-let valorTotal = 0;
-let saldoAtual= 3000;
-
-botaoAdicionar.onclick = function() {
-
-  const atividade = campoAtividade.value.trim();
-  const valor = Number(campoValor.value);
-  const quantidade = Number(campoQuantidade.value);
-
-  if (atividade==="") {
-    alert("Digite o nome da atividade.");
-    return;
-  }
-
-  if (valor<=0) {
-    alert("Digite um valor válido.");
-    return;
-  }
-
-  if  (quantidade <=0) {
-    alert("Digite uma quantidade válida.");
-    return;
-  }
-
-  const subtotal = valor * quantidade;
-
-  valorTotal += subtotal;
-
-  saldoAtual -= subtotal;
-
-  comandas[campoNumero.value].saldo = saldoAtual;
-  comandas[campoNumero.value].total = valorTotal;
-
-  comandas[campoNumero.value].itens.push({
-    atividade: atividade,
-    quantidade: quantidade,
-    subtotal: subtotal
+    definirMensagem(mensagemCartoes, "");
+    atualizarResumo();
   });
 
-  saldo.textContent =saldoAtual.toFixed(2)
+  valor.textContent = dinheiro(0);
 
-  listaItens.innerHTML += `
-  <p>${atividade} - ${quantidade}x - R$ ${subtotal.toFixed(2)}</p>
-  `;
+  controles.appendChild(botaoMenos);
+  controles.appendChild(valor);
+  controles.appendChild(botaoMais);
 
-  total.textContent = valorTotal.toFixed(2);
+  cartao.appendChild(controles);
+}
 
-  campoAtividade.value = "";
-  campoValor.value = "";
-  campoQuantidade.value = 1;
-};
+function criarOpcoes(cartao, categoria) {
+  const lista = document.createElement("div");
+  lista.className = "opcoesPreco";
 
-const botaoSala2 =
-document.querySelector("#sala2");
-const telaSala2 =
-document.querySelector("#sala2Tela");
-const botaoBuscarSala2 =
-document.querySelector("#buscarComandaSala2");
-const campoNumeroSala2 =
-document.querySelector("#numeroComandaSala2");
-const numeroExibidoSala2 =
-document.querySelector("#numeroExibidoSala2");
-const itensSala2 =
-document.querySelector("#itensSala2");
-const mensagemSala2 = 
-document.querySelector("#mensagemSala2");
+  categoria.opcoes.forEach(function (opcao, indice) {
+    const botao = document.createElement("button");
 
-botaoSala2.onclick = function() {
-  telaInicio.style.display = "none";
-  telaSala2.style.display = "block";
-};
+    botao.type = "button";
+    botao.className = "opcaoPreco";
+    botao.innerHTML =
+      "<span>" + escaparHTML(opcao.nome) + "</span>" +
+      "<strong>" + dinheiro(opcao.valor) + "</strong>";
 
-botaoBuscarSala2.onclick = async function() {
+    botao.addEventListener("click", function () {
+      const chave = categoria.id + "_" + indice;
 
-  const numero = campoNumeroSala2.value;
+      if (selecoes[chave]) {
+        delete selecoes[chave];
+        botao.classList.remove("selecionado");
+      } else {
+        if (categoria.id === "veiculo") {
+          categoria.opcoes.forEach(function (_, outroIndice) {
+            const outraChave = categoria.id + "_" + outroIndice;
+            delete selecoes[outraChave];
 
-  mensagemSala2.textContent = "";
+            const botoes = lista.querySelectorAll("button");
+            botoes[outroIndice].classList.remove("selecionado");
+          });
+        }
 
-  if (numero === "") {
-    mensagemSala2.textContent = "Digite o número da comanda.";
-    return;
-  }
+        selecoes[chave] = {
+          categoria: categoria.id,
+          nome: opcao.nome,
+          valor: opcao.valor
+        };
 
-  const { data, error } = await supabaseClient
-  .from("comandas")
-  .select("*")
-  .eq("numero", Number(numero))
-  .single();
+        botao.classList.add("selecionado");
+      }
 
-  if (error || !data) {
-    mensagemSala2.textContent = "Essa comanda não existe.";
-    return;
-  }
-
-  comandas[numero] = {
-    saldo: data.saldo ?? 3000,
-    total: data.total ?? 0,
-    gastos: data.gastos ?? 0,
-    ganhos: data.ganhos ?? 0,
-    itens: data.itens ?? []
-  };
-
-  numeroExibidoSala2.textContent = numero;
-
-  document.querySelector("#saldoSala2").textContent =
-  comandas[numero].saldo.toFixed(2);
-
-  document.querySelector("#totalSala2").textContent =
-    (comandas[numero].ganhos||0).toFixed(2);
-
-  const listaSala2 =
-  document.querySelector("#listaItensSala2");
-
-  listaSala2.innerHTML = "";
-
-  if (comandas[numero].itens.length === 0) {
-    listaSala2.innerHTML = "<p>Nenhum item adicionado.</p>";
-  } else {
-    comandas[numero].itens.forEach(function(item) {
-      listaSala2.innerHTML += `
-      <p>
-      ${item.atividade} - ${item.quantidade}x - 
-      R$ ${item.subtotal.toFixed(2)}
-      </p>
-      `;
+      atualizarResumo();
     });
-  }
 
-  itensSala2.style.display = "block";
-};
+    lista.appendChild(botao);
+  });
 
-const botaoAdicionarSala2 =
-document.querySelector("#adicionarSala2");
-const campoAtividadeSala2 =
-document.querySelector("#atividadeSala2");
-const campoValorSala2 =
-document.querySelector("#valorSala2");
-const campoQuantidadeSala2 = 
-document.querySelector("#quantidadeSala2");
+  cartao.appendChild(lista);
+}
 
-botaoAdicionarSala2.onclick = function() {
+function criarControleMoradia(cartao, categoria) {
+  const preco = document.createElement("p");
+  preco.className = "precoItem";
+  preco.textContent = "Valor por unidade: " + dinheiro(categoria.valor);
 
-  const numero =
-  campoNumeroSala2.value;
-  const atividade =
-  campoAtividadeSala2.value.trim();
-  const valor =
-  Number(campoValorSala2.value);
-  const quantidade =
-  Number(campoQuantidadeSala2.value);
+  const controles = document.createElement("div");
+  controles.className = "controlesQuantidade";
 
-  if (atividade === "") {
-    alert("Digite como você ganhou esse dinheiro.");
+  const botaoMenos = document.createElement("button");
+  botaoMenos.type = "button";
+  botaoMenos.className = "menos";
+  botaoMenos.textContent = "−";
+
+  const quantidade = document.createElement("span");
+  quantidade.className = "quantidade";
+  quantidade.textContent = "0";
+
+  const botaoMais = document.createElement("button");
+  botaoMais.type = "button";
+  botaoMais.className = "mais";
+  botaoMais.textContent = "+";
+
+  botaoMenos.addEventListener("click", function () {
+    selecoes[categoria.id] = Math.max(
+      0,
+      (selecoes[categoria.id] || 0) - 1
+    );
+
+    quantidade.textContent = selecoes[categoria.id];
+    atualizarResumo();
+  });
+
+  botaoMais.addEventListener("click", function () {
+    const atual = selecoes[categoria.id] || 0;
+    const totalAtual = calcularTotalSelecoes();
+
+    if (totalAtual + categoria.valor > saldoInicial) {
+      definirMensagem(
+        mensagemCartoes,
+        "Saldo insuficiente para adicionar essa unidade."
+      );
+      return;
+    }
+
+    selecoes[categoria.id] = atual + 1;
+    quantidade.textContent = selecoes[categoria.id];
+
+    definirMensagem(mensagemCartoes, "");
+    atualizarResumo();
+  });
+
+  controles.appendChild(botaoMenos);
+  controles.appendChild(quantidade);
+  controles.appendChild(botaoMais);
+
+  cartao.appendChild(preco);
+  cartao.appendChild(controles);
+}
+
+
+// ============================================
+// CÁLCULOS DA SALA 1
+// ============================================
+
+function calcularTotalSelecoes() {
+  let total = 0;
+
+  categorias.forEach(function (categoria) {
+    if (categoria.tipo === "orcamento") {
+      total += selecoes[categoria.id] || 0;
+    }
+
+    if (categoria.tipo === "moradia") {
+      total += (selecoes[categoria.id] || 0) * categoria.valor;
+    }
+
+    if (categoria.tipo === "opcoes") {
+      categoria.opcoes.forEach(function (_, indice) {
+        const chave = categoria.id + "_" + indice;
+
+        if (selecoes[chave]) {
+          total += selecoes[chave].valor;
+        }
+      });
+    }
+  });
+
+  return total;
+}
+
+function gerarItensSelecao() {
+  const itens = [];
+
+  categorias.forEach(function (categoria) {
+    if (categoria.tipo === "orcamento") {
+      const valor = selecoes[categoria.id] || 0;
+
+      if (valor > 0) {
+        itens.push({
+          tipo: "gasto",
+          categoria: categoria.id,
+          atividade: categoria.titulo,
+          quantidade: 1,
+          valor: valor,
+          total: valor
+        });
+      }
+    }
+
+    if (categoria.tipo === "moradia") {
+      const quantidade = selecoes[categoria.id] || 0;
+
+      if (quantidade > 0) {
+        itens.push({
+          tipo: "gasto",
+          categoria: categoria.id,
+          atividade: categoria.titulo,
+          quantidade: quantidade,
+          valor: categoria.valor,
+          total: quantidade * categoria.valor
+        });
+      }
+    }
+
+    if (categoria.tipo === "opcoes") {
+      categoria.opcoes.forEach(function (_, indice) {
+        const chave = categoria.id + "_" + indice;
+
+        if (selecoes[chave]) {
+          const item = selecoes[chave];
+
+          itens.push({
+            tipo: "gasto",
+            categoria: categoria.id,
+            atividade: categoria.titulo + " - " + item.nome,
+            quantidade: 1,
+            valor: item.valor,
+            total: item.valor
+          });
+        }
+      });
+    }
+  });
+
+  return itens;
+}
+
+function atualizarResumo() {
+  const totalSelecao = calcularTotalSelecoes();
+
+  totalElemento.textContent = formatarDinheiro(totalGasto + totalSelecao);
+
+  saldoElemento.textContent = formatarDinheiro(
+    Math.max(0, saldoAtual - totalSelecao)
+  );
+
+  renderizarListaItens();
+}
+
+function renderizarListaItens() {
+  listaItens.innerHTML = "";
+
+  const itensAnteriores = movimentacoes.filter(function (item) {
+    return item.tipo === "gasto";
+  });
+
+  const itensNovos = gerarItensSelecao();
+  const todos = itensAnteriores.concat(itensNovos);
+
+  if (todos.length === 0) {
+    const texto = document.createElement("p");
+    texto.textContent = "Nenhuma compra registrada nesta comanda.";
+    listaItens.appendChild(texto);
     return;
-  }  
+  }
 
-  if (valor <=0) {
-    alert("Digite um valor válido.");
+  todos.forEach(function (item) {
+    const linha = document.createElement("div");
+
+    const nome = document.createElement("span");
+    nome.textContent = item.atividade || "Movimentação";
+
+    const valor = document.createElement("strong");
+    valor.textContent = dinheiro(item.total ?? item.valor ?? 0);
+
+    linha.appendChild(nome);
+    linha.appendChild(valor);
+    listaItens.appendChild(linha);
+  });
+}
+
+
+// ============================================
+// ABRIR OU CRIAR COMANDA NO SUPABASE
+// ============================================
+
+async function abrirComanda() {
+  const numero = Number(campoNumero.value);
+
+  if (!Number.isInteger(numero) || numero < 1 || numero > 50) {
+    definirMensagem(mensagem, "Digite um número de comanda entre 1 e 50.");
     return;
   }
 
-  if (quantidade <=0) {
-    alert("Digite uma quantidade válida.");
+  if (!supabaseClient) {
+    definirMensagem(mensagem, "A conexão com o Supabase não foi carregada.");
     return;
   }
 
-  const subtotal = 
-  valor * quantidade;
+  botaoContinuar.disabled = true;
+  definirMensagem(mensagem, "Carregando comanda...");
 
-  if (!comandas[numero].ganhos) {
-    comandas[numero].ganhos = 0;
+  try {
+    const resultado = await supabaseClient
+      .from("comandas")
+      .select("*")
+      .eq("numero", numero)
+      .maybeSingle();
+
+    if (resultado.error) {
+      throw resultado.error;
+    }
+
+    let registro = resultado.data;
+
+    if (!registro) {
+      const saldoNovo = obterSaldoInicial(numero);
+
+      const insercao = await supabaseClient
+        .from("comandas")
+        .insert({
+          numero: numero,
+          saldo: saldoNovo,
+          total: 0,
+          itens: []
+        })
+        .select("*")
+        .single();
+
+      if (insercao.error) {
+        throw insercao.error;
+      }
+
+      registro = insercao.data;
+    }
+
+    comandaAtual = registro;
+    numeroAtual = numero;
+
+    saldoInicial = obterSaldoInicial(numero);
+
+    saldoAtual = Number(registro.saldo ?? saldoInicial);
+    totalGasto = Number(registro.total ?? 0);
+
+    movimentacoes = Array.isArray(registro.itens)
+      ? registro.itens
+      : [];
+
+    selecoes = {};
+
+    numeroComanda.textContent = String(numero).padStart(3, "0");
+
+    produtos.style.display = "block";
+
+    definirMensagem(mensagem, "");
+
+    criarCartoes();
+    atualizarResumo();
+
+  } catch (erro) {
+    console.error("Erro ao abrir comanda:", erro);
+
+    definirMensagem(
+      mensagem,
+      "Não foi possível abrir a comanda. Confira a conexão e tente novamente."
+    );
+
+  } finally {
+    botaoContinuar.disabled = false;
+  }
+}
+
+botaoContinuar.addEventListener("click", abrirComanda);
+
+
+// ============================================
+// SALVAR SALA 1
+// ============================================
+
+async function salvarComanda() {
+  if (!comandaAtual || numeroAtual === null) {
+    definirMensagem(mensagemCartoes, "Abra uma comanda primeiro.");
+    return;
   }
 
-  comandas[numero].saldo += subtotal;
+  const novosItens = gerarItensSelecao();
+  const totalNovos = novosItens.reduce(function (soma, item) {
+    return soma + Number(item.total || 0);
+  }, 0);
 
-  comandas[numero].ganhos += subtotal;
+  if (totalNovos > saldoAtual) {
+    definirMensagem(mensagemCartoes, "O total das compras ultrapassa o saldo disponível.");
+    return;
+  }
 
-  comandas[numero].itens.push({
+  const totalAtualizado = totalGasto + totalNovos;
+  const saldoAtualizado = saldoAtual - totalNovos;
+
+  const todosItens = movimentacoes.concat(novosItens);
+
+  botaoSalvar.disabled = true;
+  definirMensagem(mensagemCartoes, "Salvando comanda...");
+
+  try {
+    const atualizacao = await supabaseClient
+      .from("comandas")
+      .update({
+        saldo: saldoAtualizado,
+        total: totalAtualizado,
+        itens: todosItens
+      })
+      .eq("numero", numeroAtual)
+      .select("*")
+      .single();
+
+    if (atualizacao.error) {
+      throw atualizacao.error;
+    }
+
+    comandaAtual = atualizacao.data;
+    saldoAtual = Number(comandaAtual.saldo);
+    totalGasto = Number(comandaAtual.total);
+    movimentacoes = Array.isArray(comandaAtual.itens)
+      ? comandaAtual.itens
+      : [];
+
+    selecoes = {};
+
+    definirMensagem(mensagemCartoes, "Comanda salva com sucesso!");
+
+    produtos.style.display = "none";
+    campoNumero.value = "";
+
+    setTimeout(function () {
+      mostrarInicio();
+    }, 900);
+
+  } catch (erro) {
+    console.error("Erro ao salvar comanda:", erro);
+
+    definirMensagem(
+      mensagemCartoes,
+      "Não foi possível salvar. Suas escolhas continuam na tela. Tente novamente."
+    );
+
+  } finally {
+    botaoSalvar.disabled = false;
+  }
+}
+
+botaoSalvar.addEventListener("click", salvarComanda);
+
+
+// ============================================
+// SALA 2: ABRIR COMANDA EXISTENTE
+// ============================================
+
+async function buscarComandaSala2() {
+  const numero = Number(campoNumeroSala2.value);
+
+  if (!Number.isInteger(numero) || numero < 1 || numero > 50) {
+    definirMensagem(mensagemSala2, "Digite um número entre 1 e 50.");
+    return;
+  }
+
+  if (!supabaseClient) {
+    definirMensagem(mensagemSala2, "A conexão com o Supabase não foi carregada.");
+    return;
+  }
+
+  botaoBuscarSala2.disabled = true;
+  definirMensagem(mensagemSala2, "Buscando comanda...");
+
+  try {
+    const resultado = await supabaseClient
+      .from("comandas")
+      .select("*")
+      .eq("numero", numero)
+      .maybeSingle();
+
+    if (resultado.error) {
+      throw resultado.error;
+    }
+
+    if (!resultado.data) {
+      definirMensagem(mensagemSala2, "Essa comanda ainda não existe. Abra-a primeiro na Sala 1.");
+      return;
+    }
+
+    comandaSala2Atual = resultado.data;
+
+    movimentacoesSala2 = Array.isArray(resultado.data.itens)
+      ? resultado.data.itens
+      : [];
+
+    numeroExibidoSala2.textContent = String(numero).padStart(3, "0");
+
+    itensSala2.style.display = "block";
+
+    definirMensagem(mensagemSala2, "");
+
+    atualizarTelaSala2();
+
+  } catch (erro) {
+    console.error("Erro ao buscar comanda da Sala 2:", erro);
+
+    definirMensagem(
+      mensagemSala2,
+      "Não foi possível buscar a comanda. Tente novamente."
+    );
+
+  } finally {
+    botaoBuscarSala2.disabled = false;
+  }
+}
+
+botaoBuscarSala2.addEventListener("click", buscarComandaSala2);
+
+
+// ============================================
+// ATUALIZAR SALA 2
+// ============================================
+
+function atualizarTelaSala2() {
+  if (!comandaSala2Atual) {
+    return;
+  }
+
+  const saldo = Number(comandaSala2Atual.saldo || 0);
+
+  const totalGanhos = movimentacoesSala2
+    .filter(function (item) {
+      return item.tipo === "ganho";
+    })
+    .reduce(function (soma, item) {
+      return soma + Number(item.total || 0);
+    }, 0);
+
+  saldoSala2Elemento.textContent = formatarDinheiro(saldo);
+  totalSala2Elemento.textContent = formatarDinheiro(totalGanhos);
+
+  listaItensSala2.innerHTML = "";
+
+  if (movimentacoesSala2.length === 0) {
+    const texto = document.createElement("p");
+    texto.textContent = "Nenhuma movimentação registrada.";
+    listaItensSala2.appendChild(texto);
+    return;
+  }
+
+  movimentacoesSala2.forEach(function (item) {
+    const linha = document.createElement("div");
+
+    const nome = document.createElement("span");
+    nome.textContent = item.atividade || "Movimentação";
+
+    const valor = document.createElement("strong");
+    const sinal = item.tipo === "ganho" ? "+" : "−";
+
+    valor.textContent = sinal + " " + dinheiro(item.total ?? item.valor ?? 0);
+
+    linha.appendChild(nome);
+    linha.appendChild(valor);
+
+    listaItensSala2.appendChild(linha);
+  });
+}
+
+
+// ============================================
+// SALA 2: REGISTRAR GANHO
+// ============================================
+
+function adicionarGanhoSala2() {
+  if (!comandaSala2Atual) {
+    definirMensagem(mensagemSala2, "Abra uma comanda primeiro.");
+    return;
+  }
+
+  const atividade = campoAtividadeSala2.value.trim();
+  const valor = Number(campoValorSala2.value);
+  const quantidade = Number(campoQuantidadeSala2.value);
+
+  if (!atividade) {
+    definirMensagem(mensagemSala2, "Digite a descrição do ganho.");
+    return;
+  }
+
+  if (!Number.isFinite(valor) || valor <= 0) {
+    definirMensagem(mensagemSala2, "Digite um valor válido.");
+    return;
+  }
+
+  if (!Number.isInteger(quantidade) || quantidade < 1) {
+    definirMensagem(mensagemSala2, "Digite uma quantidade válida.");
+    return;
+  }
+
+  const total = valor * quantidade;
+
+  movimentacoesSala2.push({
+    tipo: "ganho",
     atividade: atividade,
+    valor: valor,
     quantidade: quantidade,
-    subtotal: subtotal,
-    tipo: "ganho"
+    total: total
   });
 
-  document.querySelector("#saldoSala2").textContent =
-  comandas[numero].saldo.toFixed(2);
-
-  document.querySelector("#totalSala2").textContent =
-  comandas[numero].ganhos.toFixed(2);
-
-  const listaSala2 =
-  document.querySelector("#listaItensSala2");
-
-  listaSala2.innerHTML = "";
-
-  comandas[numero].itens.forEach(function (item) {
-
-    listaSala2.innerHTML += `
-    <p>
-    ${item.atividade} - ${item.quantidade}x - 
-    R$ ${item.subtotal.toFixed(2)}
-    </p>
-    `;
-
-  });
+  comandaSala2Atual.saldo =
+    Number(comandaSala2Atual.saldo || 0) + total;
 
   campoAtividadeSala2.value = "";
   campoValorSala2.value = "";
-  campoQuantidadeSala2.value = 1;
+  campoQuantidadeSala2.value = "1";
 
-};
+  definirMensagem(mensagemSala2, "");
 
-const botaoSalvarComanda =
-document.querySelector("#salvarComanda");
+  atualizarTelaSala2();
+}
 
-botaoSalvarComanda.onclick = async function() {
+botaoAdicionarSala2.addEventListener("click", adicionarGanhoSala2);
 
-  const numero = campoNumero.value;
 
-  if (numero === "") {
-    alert("Digite o número da comanda.");
+// ============================================
+// SALVAR SALA 2
+// ============================================
+
+async function salvarSala2() {
+  if (!comandaSala2Atual) {
+    definirMensagem(mensagemSala2, "Abra uma comanda primeiro.");
     return;
   }
 
-  comandas[numero] = {
-    saldo: saldoAtual,
-    total: valorTotal,
-    itens: comandas[numero]?.itens||[]
-  };
+  botaoSalvarSala2.disabled = true;
+  definirMensagem(mensagemSala2, "Salvando comanda...");
 
-  const { error } = await supabaseClient
-  .from("comandas")
-  .update({
-    saldo: saldoAtual,
-    total: valorTotal
-  })
-  .eq("numero", Number(numero));
+  try {
+    const atualizacao = await supabaseClient
+      .from("comandas")
+      .update({
+        saldo: Number(comandaSala2Atual.saldo),
+        itens: movimentacoesSala2
+      })
+      .eq("numero", Number(comandaSala2Atual.numero))
+      .select("*")
+      .single();
 
-  if (error) {
-    alert("ERRO AO SALVAR NO SUPABASE: " + error.message);
-    return;
+    if (atualizacao.error) {
+      throw atualizacao.error;
+    }
+
+    comandaSala2Atual = atualizacao.data;
+
+    movimentacoesSala2 = Array.isArray(atualizacao.data.itens)
+      ? atualizacao.data.itens
+      : [];
+
+    definirMensagem(mensagemSala2, "Comanda salva com sucesso!");
+
+    itensSala2.style.display = "none";
+    campoNumeroSala2.value = "";
+
+    setTimeout(function () {
+      mostrarInicio();
+    }, 900);
+
+  } catch (erro) {
+    console.error("Erro ao salvar Sala 2:", erro);
+
+    definirMensagem(
+      mensagemSala2,
+      "Não foi possível salvar. Confira a conexão e tente novamente."
+    );
+
+  } finally {
+    botaoSalvarSala2.disabled = false;
   }
+}
 
-  alert("Comanda " + numero + " salva com sucesso!");
+botaoSalvarSala2.addEventListener("click", salvarSala2);
 
-  telaComanda.style.display = "none";
 
-  telaInicio.style.display = "block";
+// ============================================
+// INICIALIZAÇÃO
+// ============================================
 
-  campoNumero.value = "";
-  campoAtividade.value = "";
-  campoValor.value = "";
-  campoQuantidade.value = 1;
+criarCartoes();
 
-  areaProdutos.style.display = "none";
-  listaItens.innerHTML = "";
-  total.textContent = "0.00"
-  saldo.textContent = "3000.00"
-
-  valorTotal = 0;
-  saldoAtual = 3000;
-};
-
-const botaoSalvarSala2 =
-document.querySelector("#salvarSala2");
-
-botaoSalvarSala2.onclick = function() {
-  
-  const numero = 
-  campoNumeroSala2.value;
-
-  if(numero === "") {
-    alert("Digite o número da comanda.");
-    return;
-  }
-
-  alert("Comanda " + numero + " salva com sucesso!")
-
-telaSala2.style.display = 
-"none";
-
-telaInicio.style.display =
-"block";
-
-campoNumeroSala2.value = ""; 
-
-document.querySelector("#mensagemSala2").textContent = "";
-
-document.querySelector("#itensSala2").style.display = "none";
-
-document.querySelector("#listaItensSala2").inner.HTML = "<p>Nenhum item adicionado.</p>"
-
-document.querySelector("#saldoSala2").textContent = "0.00";
-
-document.querySelector("#totalSala2").textContent = "0.00";
-
-campoAtividadeSala2.value = "";
-campoValorSala2.value = "";
-campoQuantidadeSala.value = 1;
-
+if (supabaseClient) {
+  console.log("SUPABASE CONECTADO!");
+} else {
+  console.error("O Supabase não foi carregado.");
 }
