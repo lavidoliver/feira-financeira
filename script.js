@@ -1,7 +1,3 @@
-// ============================================
-// CONFIGURAÇÃO DO SUPABASE
-// ============================================
-
 const SUPABASE_URL = "https://celgectqwcsdoczkfnin.supabase.co";
 
 const SUPABASE_KEY = "sb_publishable_kKyXJsshfC40IaLh-FFhCQ_TIoeupXn";
@@ -16,11 +12,6 @@ if (window.supabase) {
 }
 
 console.log("SCRIPT CARREGADO!");
-
-
-// ============================================
-// ELEMENTOS HTML
-// ============================================
 
 const inicio = document.getElementById("inicio");
 const telaSala1 = document.getElementById("comanda");
@@ -61,11 +52,6 @@ const botaoAdicionarSala2 = document.getElementById("adicionarSala2");
 const listaItensSala2 = document.getElementById("listaItensSala2");
 const botaoSalvarSala2 = document.getElementById("salvarSala2");
 
-
-// ============================================
-// ESTADO DO SISTEMA
-// ============================================
-
 let comandaAtual = null;
 let numeroAtual = null;
 
@@ -78,11 +64,6 @@ let selecoes = {};
 
 let comandaSala2Atual = null;
 let movimentacoesSala2 = [];
-
-
-// ============================================
-// CONFIGURAÇÃO DAS COMANDAS
-// ============================================
 
 function obterSaldoInicial(numero) {
   if (numero >= 1 && numero <= 10) {
@@ -107,11 +88,6 @@ function obterSaldoInicial(numero) {
 
   return null;
 }
-
-
-// ============================================
-// FORMATAÇÃO DE VALORES
-// ============================================
 
 function formatarDinheiro(valor) {
   return Number(valor || 0).toLocaleString("pt-BR", {
@@ -144,11 +120,6 @@ function definirMensagem(elemento, texto) {
   }
 }
 
-
-// ============================================
-// NAVEGAÇÃO ENTRE AS SALAS
-// ============================================
-
 function mostrarInicio() {
   inicio.style.display = "block";
   telaSala1.style.display = "none";
@@ -179,11 +150,6 @@ voltarSala1.addEventListener("click", mostrarInicio);
 
 voltarSala2.addEventListener("click", mostrarInicio);
 
-
-// ============================================
-// CARTÕES DA SALA 1
-// ============================================
-
 const categorias = [
   {
     id: "alimentacao",
@@ -195,7 +161,7 @@ const categorias = [
   },
   {
     id: "farmacia",
-    titulo: "Farmácia",
+    titulo: "Medicamentos",
     descricao: "Reserve dinheiro para medicamentos.",
     icone: "💊",
     tipo: "orcamento",
@@ -203,7 +169,7 @@ const categorias = [
   },
   {
     id: "higiene",
-    titulo: "Higiene básica",
+    titulo: "Higiene Pessoal",
     descricao: "Cuide dos produtos essenciais.",
     icone: "🧴",
     tipo: "orcamento",
@@ -211,36 +177,28 @@ const categorias = [
   },
   {
     id: "roupas",
-    titulo: "Roupas",
-    descricao: "Defina quanto deseja gastar.",
+    titulo: "Vestuário",
+    descricao: "Defina quanto deseja gastar com vestuário.",
     icone: "👕",
     tipo: "orcamento",
     incremento: 50
   },
   {
-    id: "bilhete",
-    titulo: "Bilhete Único",
+    id: "transportePublico",
+    titulo: "Transporte Público",
     descricao: "Adicione valores para transporte público.",
     icone: "🚌",
     tipo: "orcamento",
     incremento: 50
   },
   {
-    id: "uber",
-    titulo: "Uber",
-    descricao: "Reserve dinheiro para corridas.",
-    icone: "🚗",
-    tipo: "orcamento",
-    incremento: 50
-  },
-  {
     id: "veiculo",
-    titulo: "Veículo próprio",
+    titulo: "Veículo Próprio",
     descricao: "Escolha o veículo que deseja adquirir.",
-    icone: "🚘",
+    icone: "🏍️",
     tipo: "opcoes",
     opcoes: [
-      { nome: "Carro popular usado", valor: 4000 },
+      { nome: "Moto", valor: 2000 },
       { nome: "Carro seminovo", valor: 6000 },
       { nome: "Carro novo", valor: 8000 }
     ]
@@ -254,12 +212,12 @@ const categorias = [
     opcoes: [
       { nome: "Bicicleta básica", valor: 300 },
       { nome: "Bicicleta intermediária", valor: 600 },
-      { nome: "Bicicleta premium", valor: 1000 }
+      { nome: "Bicicleta profissional", valor: 1000 }
     ]
   },
   {
     id: "seguroMoradia",
-    titulo: "Seguro de moradia",
+    titulo: "Seguro de Moradia",
     descricao: "Escolha uma cobertura.",
     icone: "🏠",
     tipo: "opcoes",
@@ -270,7 +228,7 @@ const categorias = [
   },
   {
     id: "seguroCarro",
-    titulo: "Seguro de carro",
+    titulo: "Seguro de Carro",
     descricao: "Escolha uma cobertura.",
     icone: "🛡️",
     tipo: "opcoes",
@@ -281,7 +239,7 @@ const categorias = [
   },
   {
     id: "convenio",
-    titulo: "Convênio médico",
+    titulo: "Convênio Médico",
     descricao: "Escolha seu plano de saúde.",
     icone: "🏥",
     tipo: "opcoes",
@@ -316,11 +274,6 @@ const categorias = [
     valor: 8000
   }
 ];
-
-
-// ============================================
-// CRIAÇÃO DOS CARTÕES
-// ============================================
 
 function criarCartoes() {
   cartoesCategorias.innerHTML = "";
@@ -519,11 +472,6 @@ function criarControleMoradia(cartao, categoria) {
   cartao.appendChild(controles);
 }
 
-
-// ============================================
-// CÁLCULOS DA SALA 1
-// ============================================
-
 function calcularTotalSelecoes() {
   let total = 0;
 
@@ -651,11 +599,6 @@ function renderizarListaItens() {
   });
 }
 
-
-// ============================================
-// ABRIR OU CRIAR COMANDA NO SUPABASE
-// ============================================
-
 async function abrirComanda() {
   const numero = Number(campoNumero.value);
 
@@ -744,11 +687,6 @@ async function abrirComanda() {
 
 botaoContinuar.addEventListener("click", abrirComanda);
 
-
-// ============================================
-// SALVAR SALA 1
-// ============================================
-
 async function salvarComanda() {
   if (!comandaAtual || numeroAtual === null) {
     definirMensagem(mensagemCartoes, "Abra uma comanda primeiro.");
@@ -822,11 +760,6 @@ async function salvarComanda() {
 
 botaoSalvar.addEventListener("click", salvarComanda);
 
-
-// ============================================
-// SALA 2: ABRIR COMANDA EXISTENTE
-// ============================================
-
 async function buscarComandaSala2() {
   const numero = Number(campoNumeroSala2.value);
 
@@ -888,11 +821,6 @@ async function buscarComandaSala2() {
 
 botaoBuscarSala2.addEventListener("click", buscarComandaSala2);
 
-
-// ============================================
-// ATUALIZAR SALA 2
-// ============================================
-
 function atualizarTelaSala2() {
   if (!comandaSala2Atual) {
     return;
@@ -937,11 +865,6 @@ function atualizarTelaSala2() {
     listaItensSala2.appendChild(linha);
   });
 }
-
-
-// ============================================
-// SALA 2: REGISTRAR GANHO
-// ============================================
 
 function adicionarGanhoSala2() {
   if (!comandaSala2Atual) {
@@ -991,11 +914,6 @@ function adicionarGanhoSala2() {
 }
 
 botaoAdicionarSala2.addEventListener("click", adicionarGanhoSala2);
-
-
-// ============================================
-// SALVAR SALA 2
-// ============================================
 
 async function salvarSala2() {
   if (!comandaSala2Atual) {
@@ -1050,11 +968,6 @@ async function salvarSala2() {
 }
 
 botaoSalvarSala2.addEventListener("click", salvarSala2);
-
-
-// ============================================
-// INICIALIZAÇÃO
-// ============================================
 
 criarCartoes();
 
