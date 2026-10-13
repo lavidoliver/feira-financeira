@@ -16,6 +16,14 @@ console.log("SCRIPT CARREGADO!");
 const inicio = document.getElementById("inicio");
 const telaSala1 = document.getElementById("comanda");
 const telaSala2 = document.getElementById("sala2Tela");
+const telaSala3 = document.getElementById("sala3Tela");
+const voltarSala3 = document.getElementById("voltarSala3");
+const mensagemSala3 = document.getElementById("mensagemSala3");
+const listaComandasSala3 = document.getElementById("listaComandasSala3");
+const detalhesComandaSala3 = document.getElementById("detalhesComandaSala3");
+const numeroDetalhesSala3 = document.getElementById("numeroDetalhesSala3");
+const resumoFinanceiroSala3 = document.getElementById("resumoFinanceiroSala3");
+const historicoSala3 = document.getElementById("historicoSala3");
 
 const botaoSala1 = document.getElementById("sala1");
 const botaoSala2 = document.getElementById("sala2");
@@ -121,34 +129,213 @@ function definirMensagem(elemento, texto) {
 }
 
 function mostrarInicio() {
-  inicio.style.display = "block";
-  telaSala1.style.display = "none";
-  telaSala2.style.display = "none";
+inicio.style.display = "block";
+telaSala1.style.display = "none";
+telaSala2.style.display = "none";
+telaSala3.style.display = "none";
 }
 
 function mostrarSala1() {
-  inicio.style.display = "none";
-  telaSala1.style.display = "block";
-  telaSala2.style.display = "none";
+inicio.style.display = "none";
+telaSala1.style.display = "block";
+telaSala2.style.display = "none";
+telaSala3.style.display = "none";
 }
 
 function mostrarSala2() {
-  inicio.style.display = "none";
-  telaSala1.style.display = "none";
-  telaSala2.style.display = "block";
+inicio.style.display = "none";
+telaSala1.style.display = "none";
+telaSala2.style.display = "block";
+telaSala3.style.display = "none";
+}
+
+function mostrarSala3() {
+inicio.style.display = "none";
+telaSala1.style.display = "none";
+telaSala2.style.display = "none";
+telaSala3.style.display = "block";
+
+carregarComandasSala3();
+}
+
+async function carregarComandasSala3() {
+  if (!supabaseClient) {
+    definirMensagem(
+      mensagemSala3,
+      "Não foi possível conectar ao banco de dados."
+    );
+    return;
+  }
+
+  definirMensagem(mensagemSala3, "Carregando comandas...");
+  listaComandasSala3.innerHTML = "";
+  detalhesComandaSala3.style.display = "none";
+
+  try {
+    const resultado = await supabaseClient
+      .from("comandas")
+      .select("*")
+      .order("numero", { ascending: true });
+
+    if (resultado.error) {
+      throw resultado.error;
+    }
+
+    const comandas = resultado.data || [];
+
+    listaComandasSala3.innerHTML = "";
+
+    if (comandas.length === 0) {
+      definirMensagem(
+        mensagemSala3,
+        "Nenhuma comanda foi aberta ainda."
+      );
+      return;
+    }
+
+    definirMensagem(
+      mensagemSala3,
+      comandas.length === 1
+        ? "1 comanda encontrada."
+        : comandas.length + " comandas encontradas."
+    );
+
+    comandas.forEach(function (comanda) {
+      const cartao = document.createElement("button");
+
+      cartao.type = "button";
+      cartao.className = "cardSala";
+      cartao.style.width = "100%";
+      cartao.style.marginBottom = "12px";
+      cartao.style.textAlign = "left";
+
+      const numeroFormatado = String(comanda.numero).padStart(3, "0");
+
+      const titulo = document.createElement("strong");
+      titulo.textContent = "Comanda #" + numeroFormatado;
+
+      const saldo = document.createElement("span");
+      saldo.textContent = "Saldo atual: " + dinheiro(comanda.saldo);
+
+      cartao.appendChild(titulo);
+      cartao.appendChild(document.createElement("br"));
+      cartao.appendChild(saldo);
+
+      cartao.addEventListener("click", function () {
+        mostrarDetalhesComandaSala3(comanda);
+      });
+
+      listaComandasSala3.appendChild(cartao);
+    });
+
+  } catch (erro) {
+    console.error("Erro ao carregar comandas da Sala 3:", erro);
+
+    definirMensagem(
+      mensagemSala3,
+      "Não foi possível carregar as comandas. Tente novamente."
+    );
+  }
+}
+
+function mostrarDetalhesComandaSala3(comanda) {
+  const itens = Array.isArray(comanda.itens)
+    ? comanda.itens
+    : [];
+
+  const numero = Number(comanda.numero);
+  const saldoInicialComanda = obterSaldoInicial(numero);
+  const saldoAtualComanda = Number(comanda.saldo ?? 0);
+
+  const totalGastoComanda = itens
+    .filter(function (item) {
+      return item.tipo === "gasto";
+    })
+    .reduce(function (soma, item) {
+      return soma + Number(item.total ?? item.valor ?? 0);
+    }, 0);
+
+  const totalGanhoComanda = itens
+    .filter(function (item) {
+      return item.tipo === "ganho";
+    })
+    .reduce(function (soma, item) {
+      return soma + Number(item.total ?? item.valor ?? 0);
+    }, 0);
+
+  numeroDetalhesSala3.textContent = String(numero).padStart(3, "0");
+
+  resumoFinanceiroSala3.innerHTML = `
+    <div>
+      <span>Saldo inicial</span>
+      <strong>${dinheiro(saldoInicialComanda)}</strong>
+    </div>
+
+    <div>
+      <span>Saldo atual</span>
+      <strong>${dinheiro(saldoAtualComanda)}</strong>
+    </div>
+
+    <div>
+      <span>Total gasto</span>
+      <strong>${dinheiro(totalGastoComanda)}</strong>
+    </div>
+
+    <div>
+      <span>Total ganho</span>
+      <strong>${dinheiro(totalGanhoComanda)}</strong>
+    </div>
+  `;
+
+  historicoSala3.innerHTML = "";
+
+  if (itens.length === 0) {
+    historicoSala3.textContent =
+      "Nenhuma atividade foi registrada nesta comanda.";
+  } else {
+    itens.forEach(function (item) {
+      const linha = document.createElement("div");
+      const nome = document.createElement("span");
+      const valor = document.createElement("strong");
+      const quantidade = Number(item.quantidade ?? 1);
+
+      const tipo = item.tipo === "ganho" ? "Ganho" : "Gasto";
+      const sinal = item.tipo === "ganho" ? "+" : "−";
+
+      nome.textContent =
+        tipo + ": " +
+        (item.atividade || item.categoria || "Movimentação") +
+        " | Quantidade: " + quantidade;
+
+      valor.textContent =
+        sinal + " " + dinheiro(item.total ?? item.valor ?? 0);
+
+      linha.appendChild(nome);
+      linha.appendChild(valor);
+
+      historicoSala3.appendChild(linha);
+    });
+  }
+
+  detalhesComandaSala3.style.display = "block";
+
+  detalhesComandaSala3.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
 }
 
 botaoSala1.addEventListener("click", mostrarSala1);
 
 botaoSala2.addEventListener("click", mostrarSala2);
 
-botaoSala3.addEventListener("click", function () {
-  alert("A sala Investir Melhor será implementada posteriormente.");
-});
+botaoSala3.addEventListener("click", mostrarSala3);
 
 voltarSala1.addEventListener("click", mostrarInicio);
 
 voltarSala2.addEventListener("click", mostrarInicio);
+
+voltarSala3.addEventListener("click", mostrarInicio); 
 
 const categorias = [
   {
