@@ -1110,44 +1110,83 @@ async function salvarComanda() {
     return;
   }
 
-  const novosItens = gerarItensSelecao();
-  const totalNovos = novosItens.reduce(function (soma, item) {
-    return soma + Number(item.total || 0);
-  }, 0);
-
-  if (totalNovos > saldoAtual) {
-    definirMensagem(mensagemCartoes, "O total das compras ultrapassa o saldo disponível.");
+  if (!supabaseClient) {
+    definirMensagem(mensagemCartoes, "Conexão com o banco indisponível.");
     return;
   }
 
-  const totalAtualizado = totalGasto + totalNovos;
-  const saldoAtualizado = saldoAtual - totalNovos;
-
-  const todosItens = movimentacoes.concat(novosItens);
-
   botaoSalvar.disabled = true;
-  definirMensagem(mensagemCartoes, "Salvando comanda...");
+  definirMensagem(mensagemCartoes, "Verificando se a feira continua ativa...");
 
   try {
+    // Confere se a feira desta comanda continua ativa.
+    const verificacaoFeira = await supabaseClient
+      .from("feiras")
+      .select("id")
+      .eq("id", comandaAtual.feira_id)
+      .eq("status", "ativa")
+      .maybeSingle();
+
+    if (verificacaoFeira.error) {
+      throw verificacaoFeira.error;
+    }
+
+    if (!verificacaoFeira.data) {
+      definirMensagem(
+        mensagemCartoes,
+        "Esta feira foi encerrada. Não é possível salvar novas movimentações."
+      );
+      return;
+    }
+
+    const novosItens = gerarItensSelecao();
+
+    const totalNovos = novosItens.reduce(function (soma, item) {
+      return soma + Number(item.total || 0);
+    }, 0);
+
+    if (totalNovos > saldoAtual) {
+      definirMensagem(
+        mensagemCartoes,
+        "O total das compras ultrapassa o saldo disponível."
+      );
+      return;
+    }
+
+    const totalAtualizado = totalGasto + totalNovos;
+    const saldoAtualizado = saldoAtual - totalNovos;
+    const todosItens = movimentacoes.concat(novosItens);
+
+    definirMensagem(mensagemCartoes, "Salvando comanda...");
+
     const atualizacao = await supabaseClient
-  .from("comandas")
-  .update({
-    saldo: saldoAtualizado,
-    total: totalAtualizado,
-    itens: todosItens
-  })
-  .eq("id", comandaAtual.id)
-  .eq("feira_id", comandaAtual.feira_id)
-  .select("*")
-  .single();
+      .from("comandas")
+      .update({
+        saldo: saldoAtualizado,
+        total: totalAtualizado,
+        itens: todosItens
+      })
+      .eq("id", comandaAtual.id)
+      .eq("feira_id", comandaAtual.feira_id)
+      .select("*")
+      .maybeSingle();
 
     if (atualizacao.error) {
       throw atualizacao.error;
     }
 
+    if (!atualizacao.data) {
+      definirMensagem(
+        mensagemCartoes,
+        "Não foi possível confirmar a atualização da comanda."
+      );
+      return;
+    }
+
     comandaAtual = atualizacao.data;
     saldoAtual = Number(comandaAtual.saldo);
     totalGasto = Number(comandaAtual.total);
+
     movimentacoes = Array.isArray(comandaAtual.itens)
       ? comandaAtual.itens
       : [];
@@ -1175,8 +1214,6 @@ async function salvarComanda() {
     botaoSalvar.disabled = false;
   }
 }
-
-botaoSalvar.addEventListener("click", salvarComanda);
 
 async function buscarComandaSala2() {
   const numero = Number(campoNumeroSala2.value);
