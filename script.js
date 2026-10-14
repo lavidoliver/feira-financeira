@@ -212,6 +212,80 @@ async function iniciarFeira() {
   }
 }
 
+async function encerrarFeira() {
+  const botao = document.getElementById("encerrarFeira");
+  const mensagem = document.getElementById("mensagemEncerramento");
+
+  if (!supabaseClient) {
+    mensagem.textContent = "Erro: conexão com o banco de dados indisponível.";
+    return;
+  }
+
+  const confirmou = window.confirm(
+    "Tem certeza de que deseja encerrar a Feira Financeira? " +
+    "As comandas e os históricos serão preservados, mas não será possível " +
+    "registrar novas movimentações enquanto não houver outra feira ativa."
+  );
+
+  if (!confirmou) {
+    return;
+  }
+
+  botao.disabled = true;
+  mensagem.textContent = "Encerrando a feira...";
+
+  try {
+    const { data: feiraAtiva, error: erroBusca } = await supabaseClient
+      .from("feiras")
+      .select("id")
+      .eq("status", "ativa")
+      .maybeSingle();
+
+    if (erroBusca) {
+      throw erroBusca;
+    }
+
+    if (!feiraAtiva) {
+      mensagem.textContent = "Não existe nenhuma feira ativa para encerrar.";
+      return;
+    }
+
+    const { data: feiraEncerrada, error: erroAtualizacao } =
+      await supabaseClient
+        .from("feiras")
+        .update({
+          status: "encerrada",
+          encerrada_em: new Date().toISOString()
+        })
+        .eq("id", feiraAtiva.id)
+        .eq("status", "ativa")
+        .select("id")
+        .maybeSingle();
+
+    if (erroAtualizacao) {
+      throw erroAtualizacao;
+    }
+
+    if (!feiraEncerrada) {
+      mensagem.textContent =
+        "A feira não foi encerrada. Verifique se ela continua ativa.";
+      return;
+    }
+
+    mensagem.textContent =
+      "Feira encerrada com sucesso! O histórico foi preservado.";
+
+    botao.textContent = "Feira Encerrada";
+  } catch (erro) {
+    console.error("Erro ao encerrar a feira:", erro);
+
+    mensagem.textContent =
+      "Não foi possível encerrar a feira. Verifique a conexão e tente novamente.";
+  } finally {
+    botao.disabled = false;
+  }
+}
+
 async function carregarComandasSala3() {
   if (!supabaseClient) {
     definirMensagem(
@@ -409,6 +483,10 @@ botaoSala1.addEventListener("click", mostrarSala1);
 document
 .getElementById("iniciarFeira")
 .addEventListener("click", iniciarFeira);
+
+document
+.getElementById("encerrarFeira")
+.addEventListener("click", encerrarFeira);
 
 botaoSala2.addEventListener("click", mostrarSala2);
 
