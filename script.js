@@ -158,6 +158,60 @@ telaSala3.style.display = "block";
 carregarComandasSala3();
 }
 
+async function iniciarFeira() {
+  if (!supabaseClient) {
+    document.getElementById("mensagemFeira").textContent =
+      "Não foi possível conectar ao banco de dados.";
+    return;
+  }
+
+  const botao = document.getElementById("iniciarFeira");
+  const mensagem = document.getElementById("mensagemFeira");
+
+  botao.disabled = true;
+  mensagem.textContent = "Iniciando feira...";
+
+  try {
+    const consulta = await supabaseClient
+      .from("feiras")
+      .select("id")
+      .eq("status", "ativa")
+      .maybeSingle();
+
+    if (consulta.error) {
+      throw consulta.error;
+    }
+
+    if (consulta.data) {
+      mensagem.textContent = "Já existe uma feira ativa!";
+      return;
+    }
+
+    const resultado = await supabaseClient
+      .from("feiras")
+      .insert({
+        status: "ativa"
+      })
+      .select("id")
+      .single();
+
+    if (resultado.error) {
+      throw resultado.error;
+    }
+
+    mensagem.textContent =
+      "Feira iniciada com sucesso! Já podemos começar.";
+
+  } catch (erro) {
+    console.error("Erro ao iniciar a feira:", erro);
+
+    mensagem.textContent =
+      "Não foi possível iniciar a feira. Verifique a conexão e tente novamente.";
+  } finally {
+    botao.disabled = false;
+  }
+}
+
 async function carregarComandasSala3() {
   if (!supabaseClient) {
     definirMensagem(
@@ -331,6 +385,10 @@ function mostrarHistoricoComandaSala3(comanda) {
 }
 
 botaoSala1.addEventListener("click", mostrarSala1);
+
+document
+.getElementById("iniciarFeira")
+.addEventListener("click", iniciarFeira);
 
 botaoSala2.addEventListener("click", mostrarSala2);
 
