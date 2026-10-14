@@ -651,49 +651,65 @@ function criarControleOrcamento(cartao, categoria) {
 
 function criarOpcoes(cartao, categoria) {
   const lista = document.createElement("div");
-  lista.className = "opcoesPreco";
+  lista.className = "opcoes-categoria";
 
   categoria.opcoes.forEach(function (opcao, indice) {
     const botao = document.createElement("button");
-
     botao.type = "button";
-    botao.className = "opcaoPreco";
-    botao.innerHTML =
-      "<span>" + escaparHTML(opcao.nome) + "</span>" +
-      "<strong>" + dinheiro(opcao.valor) + "</strong>";
+    botao.textContent = opcao.nome;
+
+    const chave = categoria.id + "_" + indice;
+
+    if (selecoes[chave]) {
+      botao.classList.add("selecionado");
+    }
 
     botao.addEventListener("click", function () {
-const chave = categoria.id + "_" + indice;
+      if (selecoes[chave]) {
+        delete selecoes[chave];
+        botao.classList.remove("selecionado");
+      } else {
+        let totalAtual = calcularTotalSelecoes();
 
-if (selecoes[chave]) {
-delete selecoes[chave];
-botao.classList.remove("selecionado");
-} else {
-const totalNovo = calcularTotalSelecoes() + opcao.valor;
+        // Ao trocar de veículo, desconta o veículo já selecionado.
+        if (categoria.id === "veiculo") {
+          categoria.opcoes.forEach(function (_, outroIndice) {
+            const outraChave = categoria.id + "_" + outroIndice;
 
-if (totalNovo > saldoAtual) {
-  definirMensagem(
-    mensagemCartoes,
-    "Saldo insuficiente para selecionar essa opção."
-  );
-  return;
-}
+            if (selecoes[outraChave]) {
+              totalAtual -= Number(selecoes[outraChave].valor);
+            }
+          });
+        }
 
-definirMensagem(mensagemCartoes, "");
+        const totalNovo = totalAtual + Number(opcao.valor);
+
+        if (totalNovo > saldoAtual) {
+          definirMensagem(
+            mensagemCartoes,
+            "Saldo insuficiente para selecionar essa opção."
+          );
+          return;
+        }
+
+        definirMensagem(mensagemCartoes, "");
+
+        // Permite apenas um veículo selecionado por vez.
         if (categoria.id === "veiculo") {
           categoria.opcoes.forEach(function (_, outroIndice) {
             const outraChave = categoria.id + "_" + outroIndice;
             delete selecoes[outraChave];
+          });
 
-            const botoes = lista.querySelectorAll("button");
-            botoes[outroIndice].classList.remove("selecionado");
+          lista.querySelectorAll("button").forEach(function (outroBotao) {
+            outroBotao.classList.remove("selecionado");
           });
         }
 
         selecoes[chave] = {
           categoria: categoria.id,
           nome: opcao.nome,
-          valor: opcao.valor
+          valor: Number(opcao.valor)
         };
 
         botao.classList.add("selecionado");
