@@ -1343,6 +1343,34 @@ function atualizarTelaSala2() {
 }
 
 async function adicionarGanhoSala2() {
+  if (!comandaSala2Atual || !comandaSala2Atual.feira_id) {
+    alert("Abra uma comanda válida antes de registrar um ganho.");
+    return;
+  }
+
+  if (!supabaseClient) {
+    alert("Não foi possível conectar ao banco de dados.");
+    return;
+  }
+
+  const { data: feiraAtiva, error: erroFeira } = await supabaseClient
+    .from("feiras")
+    .select("id")
+    .eq("id", comandaSala2Atual.feira_id)
+    .eq("status", "ativa")
+    .maybeSingle();
+
+  if (erroFeira) {
+    console.error("Erro ao verificar a feira:", erroFeira);
+    alert("Não foi possível verificar se a feira continua ativa. Tente novamente.");
+    return;
+  }
+
+  if (!feiraAtiva) {
+    alert("Esta feira foi encerrada. Não é possível registrar novos ganhos.");
+    return;
+  }
+  
   if (!comandaSala2Atual) {
     definirMensagem(mensagemSala2, "Abra uma comanda primeiro.");
     return;
@@ -1392,6 +1420,34 @@ async function adicionarGanhoSala2() {
 botaoAdicionarSala2.addEventListener("click", adicionarGanhoSala2);
 
 async function salvarSala2() {
+  if (!comandaSala2Atual || !comandaSala2Atual.feira_id) {
+    alert("Abra uma comanda válida antes de salvar.");
+    return;
+  }
+
+  if (!supabaseClient) {
+    alert("Não foi possível conectar ao banco de dados.");
+    return;
+  }
+
+  const { data: feiraAtiva, error: erroFeira } = await supabaseClient
+    .from("feiras")
+    .select("id")
+    .eq("id", comandaSala2Atual.feira_id)
+    .eq("status", "ativa")
+    .maybeSingle();
+
+  if (erroFeira) {
+    console.error("Erro ao verificar a feira:", erroFeira);
+    alert("Não foi possível verificar se a feira continua ativa. Tente novamente.");
+    return;
+  }
+
+  if (!feiraAtiva) {
+    alert("Esta feira foi encerrada. Não é possível salvar alterações.");
+    return;
+  }
+  
   if (!comandaSala2Atual) {
     definirMensagem(mensagemSala2, "Abra uma comanda primeiro.");
     return;
