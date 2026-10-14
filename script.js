@@ -1342,7 +1342,7 @@ function atualizarTelaSala2() {
   });
 }
 
-function adicionarGanhoSala2() {
+async function adicionarGanhoSala2() {
   if (!comandaSala2Atual) {
     definirMensagem(mensagemSala2, "Abra uma comanda primeiro.");
     return;
