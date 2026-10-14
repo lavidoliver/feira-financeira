@@ -622,14 +622,16 @@ function criarControleOrcamento(cartao, categoria) {
   botaoMais.addEventListener("click", function () {
     const atual = selecoes[categoria.id] || 0;
     const proximo = atual + categoria.incremento;
+    const totalComNovoValor =
+    calcularTotalSelecoes() + categoria.incremento;
 
-    if (proximo > saldoInicial) {
-      definirMensagem(
-        mensagemCartoes,
-        "Esse valor ultrapassa o saldo inicial da comanda."
-      );
-      return;
-    }
+  if (totalComNovoValor > saldoAtual) {
+  definirMensagem(
+   mensagemCartoes,
+   "Esse valor ultrapassa o saldo disponível da comanda."
+  );
+  return;
+}
 
     selecoes[categoria.id] = proximo;
     valor.textContent = dinheiro(proximo);
@@ -661,12 +663,23 @@ function criarOpcoes(cartao, categoria) {
       "<strong>" + dinheiro(opcao.valor) + "</strong>";
 
     botao.addEventListener("click", function () {
-      const chave = categoria.id + "_" + indice;
+const chave = categoria.id + "_" + indice;
 
-      if (selecoes[chave]) {
-        delete selecoes[chave];
-        botao.classList.remove("selecionado");
-      } else {
+if (selecoes[chave]) {
+delete selecoes[chave];
+botao.classList.remove("selecionado");
+} else {
+const totalNovo = calcularTotalSelecoes() + opcao.valor;
+
+if (totalNovo > saldoAtual) {
+  definirMensagem(
+    mensagemCartoes,
+    "Saldo insuficiente para selecionar essa opção."
+  );
+  return;
+}
+
+definirMensagem(mensagemCartoes, "");
         if (categoria.id === "veiculo") {
           categoria.opcoes.forEach(function (_, outroIndice) {
             const outraChave = categoria.id + "_" + outroIndice;
@@ -729,15 +742,15 @@ function criarControleMoradia(cartao, categoria) {
 
   botaoMais.addEventListener("click", function () {
     const atual = selecoes[categoria.id] || 0;
-    const totalAtual = calcularTotalSelecoes();
+const totalAtual = calcularTotalSelecoes();
 
-    if (totalAtual + categoria.valor > saldoInicial) {
-      definirMensagem(
-        mensagemCartoes,
-        "Saldo insuficiente para adicionar essa unidade."
-      );
-      return;
-    }
+if (totalAtual + categoria.valor > saldoAtual) {
+  definirMensagem(
+    mensagemCartoes,
+    "Saldo insuficiente para adicionar essa unidade."
+  );
+  return;
+}
 
     selecoes[categoria.id] = atual + 1;
     quantidade.textContent = selecoes[categoria.id];
