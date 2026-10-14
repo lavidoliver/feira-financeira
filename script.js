@@ -226,11 +226,31 @@ async function carregarComandasSala3() {
   detalhesComandaSala3.style.display = "none";
 
   try {
-    const resultado = await supabaseClient
-      .from("comandas")
-      .select("*")
-      .order("numero", { ascending: true });
+    const resultadoFeira = await supabaseClient
+  .from("feiras")
+  .select("id")
+  .eq("status", "ativa")
+  .maybeSingle();
 
+if (resultadoFeira.error) {
+  throw resultadoFeira.error;
+}
+
+const feiraAtiva = resultadoFeira.data;
+
+if (!feiraAtiva) {
+  definirMensagem(
+    mensagemSala3,
+    "Não existe uma feira ativa no momento."
+  );
+  return;
+}
+
+const resultado = await supabaseClient
+  .from("comandas")
+  .select("*")
+  .eq("feira_id", feiraAtiva.id)
+  .order("numero", { ascending: true });
     if (resultado.error) {
       throw resultado.error;
     }
@@ -1238,14 +1258,15 @@ async function salvarSala2() {
 
   try {
     const atualizacao = await supabaseClient
-      .from("comandas")
-      .update({
-        saldo: Number(comandaSala2Atual.saldo),
-        itens: movimentacoesSala2
-      })
-      .eq("numero", Number(comandaSala2Atual.numero))
-      .select("*")
-      .single();
+.from("comandas")
+.update({
+saldo: Number(comandaSala2Atual.saldo),
+itens: movimentacoesSala2
+})
+.eq("id", comandaSala2Atual.id)
+.eq("feira_id", comandaSala2Atual.feira_id)
+.select("*")
+.single();
 
     if (atualizacao.error) {
       throw atualizacao.error;
