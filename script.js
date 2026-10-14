@@ -1003,15 +1003,16 @@ async function salvarComanda() {
 
   try {
     const atualizacao = await supabaseClient
-      .from("comandas")
-      .update({
-        saldo: saldoAtualizado,
-        total: totalAtualizado,
-        itens: todosItens
-      })
-      .eq("numero", numeroAtual)
-      .select("*")
-      .single();
+  .from("comandas")
+  .update({
+    saldo: saldoAtualizado,
+    total: totalAtualizado,
+    itens: todosItens
+  })
+  .eq("id", comandaAtual.id)
+  .eq("feira_id", comandaAtual.feira_id)
+  .select("*")
+  .single();
 
     if (atualizacao.error) {
       throw atualizacao.error;
@@ -1067,12 +1068,33 @@ async function buscarComandaSala2() {
   definirMensagem(mensagemSala2, "Buscando comanda...");
 
   try {
-    const resultado = await supabaseClient
-      .from("comandas")
-      .select("*")
-      .eq("numero", numero)
-      .maybeSingle();
+    const resultadoFeira = await supabaseClient
+  .from("feiras")
+  .select("id")
+  .eq("status", "ativa")
+  .maybeSingle();
 
+if (resultadoFeira.error) {
+  throw resultadoFeira.error;
+}
+
+const feiraAtiva = resultadoFeira.data;
+
+if (!feiraAtiva) {
+  definirMensagem(
+    mensagemSala2,
+    "A feira ainda não foi iniciada. Aguarde o início da Feira Financeira."
+  );
+  return;
+}
+
+const resultado = await supabaseClient
+  .from("comandas")
+  .select("*")
+  .eq("numero", numero)
+  .eq("feira_id", feiraAtiva.id)
+  .maybeSingle();
+    
     if (resultado.error) {
       throw resultado.error;
     }
