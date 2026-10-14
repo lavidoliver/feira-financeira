@@ -817,13 +817,38 @@ async function abrirComanda() {
   }
 
   botaoContinuar.disabled = true;
-  definirMensagem(mensagem, "Carregando comanda...");
+  definirMensagem(mensagem, "Verificando a feira...");
 
   try {
+    // 1. Buscar a feira ativa
+    const resultadoFeira = await supabaseClient
+      .from("feiras")
+      .select("id")
+      .eq("status", "ativa")
+      .maybeSingle();
+
+    if (resultadoFeira.error) {
+      throw resultadoFeira.error;
+    }
+
+    const feiraAtiva = resultadoFeira.data;
+
+    if (!feiraAtiva) {
+      definirMensagem(
+        mensagem,
+        "A feira ainda não foi iniciada. Aguarde o início da Feira Financeira."
+      );
+      return;
+    }
+
+    // 2. Buscar a comanda somente nesta feira
+    definirMensagem(mensagem, "Carregando comanda...");
+
     const resultado = await supabaseClient
       .from("comandas")
       .select("*")
       .eq("numero", numero)
+      .eq("feira_id", feiraAtiva.id)
       .maybeSingle();
 
     if (resultado.error) {
@@ -832,6 +857,7 @@ async function abrirComanda() {
 
     let registro = resultado.data;
 
+    // 3. Criar a comanda se ela ainda não existir nesta feira
     if (!registro) {
       const saldoNovo = obterSaldoInicial(numero);
 
@@ -841,7 +867,8 @@ async function abrirComanda() {
           numero: numero,
           saldo: saldoNovo,
           total: 0,
-          itens: []
+          itens: [],
+          feira_id: feiraAtiva.id
         })
         .select("*")
         .single();
@@ -853,6 +880,7 @@ async function abrirComanda() {
       registro = insercao.data;
     }
 
+    // 4. Carregar os dados da comanda
     comandaAtual = registro;
     numeroAtual = numero;
 
