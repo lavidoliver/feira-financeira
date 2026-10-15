@@ -72,6 +72,7 @@ let selecoes = {};
 
 let comandaSala2Atual = null;
 let movimentacoesSala2 = [];
+let novosGanhosSala2 = [];
 
 function obterSaldoInicial(numero) {
   if (numero >= 1 && numero <= 10) {
@@ -1312,6 +1313,8 @@ const resultado = await supabaseClient
       ? resultado.data.itens
       : [];
 
+    novosGanhosSala2 = [];
+
     numeroExibidoSala2.textContent = String(numero).padStart(3, "0");
 
     itensSala2.style.display = "block";
@@ -1435,13 +1438,16 @@ async function adicionarGanhoSala2() {
 
   const total = valor * quantidade;
 
-  movimentacoesSala2.push({
+  const novoGanho = {
     tipo: "ganho",
     atividade: atividade,
     valor: valor,
     quantidade: quantidade,
     total: total
   });
+
+  movimentacoesSala2.push(novoGanho);
+  novosGanhosSala2.push(novoGanho);
 
   comandaSala2Atual.saldo =
     Number(comandaSala2Atual.saldo || 0) + total;
@@ -1509,6 +1515,39 @@ itens: movimentacoesSala2
     if (atualizacao.error) {
       throw atualizacao.error;
     }
+
+    if (novosGanhosSala2.length > 0) {
+  const registrosGanhos = novosGanhosSala2.map(function (item) {
+    return {
+      comanda_id: comandaSala2Atual.id,
+      feira_id: comandaSala2Atual.feira_id,
+      tipo: "ganho",
+      atividade: item.atividade,
+      valor: Number(item.valor),
+      quantidade: Number(item.quantidade)
+    };
+  });
+
+  const insercaoGanhos = await supabaseClient
+    .from("movimentacoes")
+    .insert(registrosGanhos);
+
+  if (insercaoGanhos.error) {
+    console.error(
+      "Erro ao registrar ganhos nas movimentações:",
+      insercaoGanhos.error
+    );
+
+    definirMensagem(
+      mensagemSala2,
+      "A comanda foi salva, mas houve um erro ao registrar os ganhos nas movimentações. Confira o erro antes de tentar novamente."
+    );
+
+    return;
+  }
+
+  novosGanhosSala2 = [];
+}
 
     comandaSala2Atual = atualizacao.data;
 
