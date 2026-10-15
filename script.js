@@ -1252,12 +1252,14 @@ async function salvarComanda() {
 
     definirMensagem(mensagemCartoes, "Comanda salva com sucesso!");
 
-    produtos.style.display = "none";
-    campoNumero.value = "";
+produtos.style.display = "none";
+campoNumero.value = "";
+comandaAtual = null;
+numeroAtual = null;
+selecoes = {};
 
-    setTimeout(function () {
-      mostrarInicio();
-    }, 900);
+definirMensagem(mensagem, "");
+definirMensagem(mensagemCartoes, "Comanda salva com sucesso!");
 
   } catch (erro) {
     console.error("Erro ao salvar comanda:", erro);
@@ -1575,12 +1577,13 @@ itens: movimentacoesSala2
 
     definirMensagem(mensagemSala2, "Comanda salva com sucesso!");
 
-    itensSala2.style.display = "none";
-    campoNumeroSala2.value = "";
+itensSala2.style.display = "none";
+campoNumeroSala2.value = "";
+comandaSala2Atual = null;
+movimentacoesSala2 = [];
+novosGanhosSala2 = [];
 
-    setTimeout(function () {
-      mostrarInicio();
-    }, 900);
+definirMensagem(mensagemSala2, "Comanda salva com sucesso!");
 
   } catch (erro) {
     console.error("Erro ao salvar Sala 2:", erro);
