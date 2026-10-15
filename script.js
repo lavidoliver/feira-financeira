@@ -1190,6 +1190,37 @@ async function salvarComanda() {
       return;
     }
 
+    if (novosItens.length > 0) {
+  const registrosMovimentacoes = novosItens.map(function (item) {
+    return {
+      comanda_id: comandaAtual.id,
+      feira_id: comandaAtual.feira_id,
+      tipo: item.tipo || "gasto",
+      atividade: item.atividade || item.categoria || "Gasto",
+      valor: Number(item.valor ?? item.total ?? 0),
+      quantidade: Number(item.quantidade || 1)
+    };
+  });
+
+  const insercaoMovimentacoes = await supabaseClient
+    .from("movimentacoes")
+    .insert(registrosMovimentacoes);
+
+  if (insercaoMovimentacoes.error) {
+    console.error(
+      "Erro ao registrar movimentações:",
+      insercaoMovimentacoes.error
+    );
+
+    definirMensagem(
+      mensagemCartoes,
+      "A comanda foi atualizada, mas houve um erro ao registrar as movimentações. Não feche a página; confira o erro antes de tentar novamente."
+    );
+
+    return;
+  }
+}
+
     comandaAtual = atualizacao.data;
     saldoAtual = Number(comandaAtual.saldo);
     totalGasto = Number(comandaAtual.total);
