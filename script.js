@@ -1109,6 +1109,8 @@ async function abrirComanda() {
 
 botaoContinuar.addEventListener("click", abrirComanda);
 
+botaoSalvar.addEventListener("click", salvarComanda);
+
 async function salvarComanda() {
   if (!comandaAtual || numeroAtual === null) {
     definirMensagem(mensagemCartoes, "Abra uma comanda primeiro.");
