@@ -1444,7 +1444,7 @@ async function adicionarGanhoSala2() {
     valor: valor,
     quantidade: quantidade,
     total: total
-  });
+  };
 
   movimentacoesSala2.push(novoGanho);
   novosGanhosSala2.push(novoGanho);
