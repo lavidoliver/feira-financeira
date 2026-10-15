@@ -159,15 +159,23 @@ telaSala3.style.display = "block";
 carregarComandasSala3();
 }
 
-async function iniciarFeira() {
-  if (!supabaseClient) {
-    document.getElementById("mensagemFeira").textContent =
-      "Não foi possível conectar ao banco de dados.";
+async function iniciarFeira(
+  botaoId = "iniciarFeira",
+  mensagemId = "mensagemFeira"
+) {
+  const botao = document.getElementById(botaoId);
+  const mensagem = document.getElementById(mensagemId);
+
+  if (!botao || !mensagem) {
+    console.error("Botão ou mensagem de início da feira não encontrado.");
     return;
   }
 
-  const botao = document.getElementById("iniciarFeira");
-  const mensagem = document.getElementById("mensagemFeira");
+  if (!supabaseClient) {
+    mensagem.textContent =
+      "Não foi possível conectar ao banco de dados.";
+    return;
+  }
 
   botao.disabled = true;
   mensagem.textContent = "Iniciando feira...";
@@ -208,6 +216,7 @@ async function iniciarFeira() {
 
     mensagem.textContent =
       "Não foi possível iniciar a feira. Verifique a conexão e tente novamente.";
+
   } finally {
     botao.disabled = false;
   }
@@ -484,6 +493,15 @@ botaoSala1.addEventListener("click", mostrarSala1);
 document
 .getElementById("iniciarFeira")
 .addEventListener("click", iniciarFeira);
+
+document
+  .getElementById("iniciarFeiraSala1")
+  .addEventListener("click", function () {
+    iniciarFeira(
+      "iniciarFeiraSala1",
+      "mensagemFeiraSala1"
+    );
+  });
 
 document
 .getElementById("encerrarFeira")
