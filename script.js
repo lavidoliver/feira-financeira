@@ -1586,3 +1586,14 @@ if (supabaseClient) {
 } else {
   console.error("O Supabase não foi carregado.");
 }
+
+const parametrosURL = new URLSearchParams(window.location.search);
+const salaConfigurada = parametrosURL.get("sala");
+
+if (salaConfigurada === "1") {
+  mostrarSala1();
+} else if (salaConfigurada === "2") {
+  mostrarSala2();
+} else if (salaConfigurada === "3") {
+  mostrarSala3();
+}
