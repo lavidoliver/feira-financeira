@@ -734,7 +734,12 @@ function criarOpcoes(cartao, categoria) {
   categoria.opcoes.forEach(function (opcao, indice) {
     const botao = document.createElement("button");
     botao.type = "button";
-    botao.textContent = opcao.nome;
+    botao.classList.add("opcaoPreco");
+
+botao.innerHTML = `
+  <span>${escaparHTML(opcao.nome)}</span>
+  <strong>${formatarDinheiro(Number(opcao.valor))}</strong>
+`;
 
     const chave = categoria.id + "_" + indice;
 
