@@ -888,3 +888,30 @@ font-family: 'Poppins', sans-serif;
 font-size: 14px;
 color: #6b2424;
 }
+
+#encerrarFeira {
+  display: block;
+  margin: 20px auto 12px;
+  padding: 14px 28px;
+  background-color: #8f1d24;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(80, 20, 20, 0.15);
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+#encerrarFeira:hover {
+  background-color: #72161c;
+  transform: translateY(-2px);
+}
+
+#encerrarFeira:disabled {
+  opacity: 0.6;
+  cursor: wait;
+  transform: none;
+}
