@@ -491,13 +491,9 @@ function mostrarHistoricoComandaSala3(comanda) {
 botaoSala1.addEventListener("click", mostrarSala1);
 
 document
-.getElementById("iniciarFeira")
-.addEventListener("click", iniciarFeira);
-
-document
   .getElementById("iniciarFeiraSala1")
   .addEventListener("click", function () {
-    iniciarFeira(
+    iniciarFeira( 
       "iniciarFeiraSala1",
       "mensagemFeiraSala1"
     );
